@@ -6,7 +6,8 @@ var Sun = {
     lightDistance: 10000,
     diameter: 3270,
     axialTilt: 7.25,
-    rotationPerSecond: 1.4604583484464283,
+    //rotationPerSecond: 1.4604583484464283,
+    rotationPerSecond: 0.000000014604583484464283,
     animations: [],
     make: function (scene, isRealistic) {
         this.manageRealism(isRealistic);
@@ -51,9 +52,7 @@ var Sun = {
 
         if (!this.isRealistic) {
             this.diameter /= 10;
-        }
-        if (!this.isRealistic) {
-            this.rotationPerSecond *= 600;
+            this.rotationPerSecond *= 60000;
         }
     }
 };
