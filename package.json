@@ -1,0 +1,29 @@
+{
+  "name": "solarsystem",
+  "version": "0.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "build": "./node_modules/.bin/browserify script.js -d -o build/app.js",
+    "watch": "./node_modules/.bin/watchify script.js -d -v -o build/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/julienroland/solarsystem.git"
+  },
+  "keywords": [
+    "solarsystem",
+    "threejs",
+    "webgl"
+  ],
+  "author": "Jux",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/julienroland/solarsystem/issues"
+  },
+  "homepage": "https://github.com/julienroland/solarsystem",
+  "dependencies": {
+    "browserify": "^11.0.1"
+  }
+}

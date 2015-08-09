@@ -1,3 +1,6 @@
+//Dependencies
+var planets = require('./lib/threex.planets');
+var atmosphere = require('./lib/threex.atmospherematerial');
 //Config
 var container = document.getElementById('scene');
 var scene;
@@ -81,7 +84,6 @@ function addControls() {
 function configureScene() {
     scene = new THREE.Scene();
     scene.fog = new THREE.Fog(0x050505, 2000, 4000);
-    //scene.fog.color.setHSV(0.102, 0.9, 0.825);
 
     HEIGHT = window.innerHeight;
     WIDTH = window.innerWidth;
@@ -90,13 +92,14 @@ function configureScene() {
     nearPlane = 100;
     farPlane = 20000;
     renderer = new THREE.WebGLRenderer({alpha: true, antialias: true});
+    renderer.setClearColor(0x000000, 1);
     renderer.setSize(WIDTH, HEIGHT);
     renderer.shadowMapEnabled = true;
     addCamera();
     if (isDev()) {
         addControls();
     }
-    addLights();
+    //addLights();
 
 
 }
@@ -153,7 +156,7 @@ function addPlanets() {
     containerEarth.scale.set(300, 300, 300);
     scene.add(containerEarth);
 
-    var earthMesh = THREEx.Planets.createEarth();
+    var earthMesh = planets.Planets.createEarth();
     earthMesh.rotation.y = 0;
     earthMesh.receiveShadow = true;
     earthMesh.castShadow = true;
@@ -163,7 +166,7 @@ function addPlanets() {
     });
 
     var geometry = new THREE.SphereGeometry(0.5, 32, 32)
-    var material = THREEx.createAtmosphereMaterial()
+    var material = atmosphere.createAtmosphereMaterial()
     material.uniforms.glowColor.value.set(0x00b3ff)
     material.uniforms.coeficient.value = 0.8
     material.uniforms.power.value = 2.0
@@ -172,7 +175,7 @@ function addPlanets() {
     containerEarth.add(mesh);
 
     var geometry = new THREE.SphereGeometry(0.5, 32, 32)
-    var material = THREEx.createAtmosphereMaterial()
+    var material = atmosphere.createAtmosphereMaterial()
     material.side = THREE.BackSide
     material.uniforms.glowColor.value.set(0x00b3ff)
     material.uniforms.coeficient.value = 0.5
@@ -181,7 +184,7 @@ function addPlanets() {
     mesh.scale.multiplyScalar(1.15);
     containerEarth.add(mesh);
 
-    var earthCloud = THREEx.Planets.createEarthCloud();
+    var earthCloud = planets.Planets.createEarthCloud();
     earthCloud.receiveShadow = true;
     earthCloud.castShadow = true;
     containerEarth.add(earthCloud);
