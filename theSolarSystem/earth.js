@@ -6,8 +6,8 @@ var Earth = {
     timeToFullSelfRotation: 84817.4724,
     isRealistic: false,
     diameter: 3,
-    atmosphereRadius: this.diameter + (this.diameter) / 10,
-    atmosphereSize: (this.diameter) / 100,
+    atmosphereRadius: undefined,
+    atmosphereSize: undefined,
     axialTilt: 23.4,
     //@math return (Degree.convert(360) / this.timeToFullSelfRotation);
     rotationPerSecond: 0.000007393570389010043,
@@ -30,10 +30,12 @@ var Earth = {
         this.containerEarth.rotateZ(this.axialTilt * Math.PI / 180);
         //Sun diameter * 109 = radius of earth's orbit (149,597,870 km) (35643)
         this.containerEarth.position.x = this.orbitRadius;
-        //this.containerEarth.position.z = 35643;
         //Earth is more or less 109 times smaller than sun
         this.containerEarth.scale.set(this.diameter, this.diameter, this.diameter);
         scene.add(this.containerEarth);
+
+        this.atmosphereRadius = this.diameter + (this.diameter / 2);
+        this.atmosphereSize = this.diameter / 60;
     },
     createMesh: function () {
         this.earthMesh = Planets.Planets.createEarth();
@@ -46,6 +48,7 @@ var Earth = {
         })
     },
     createAtmosphere: function () {
+        console.log(this.atmosphereSize);
         var geometry = new THREE.SphereGeometry(this.atmosphereSize, this.atmosphereRadius, this.atmosphereRadius);
         var material = Atmospheres.createAtmosphereMaterial()
         material.uniforms.glowColor.value.set(0x00b3ff)
@@ -82,11 +85,7 @@ var Earth = {
 
         if (!this.isRealistic) {
             this.diameter *= 10;
-        }
-        if (!this.isRealistic) {
             this.orbitRadius /= 100;
-        }
-        if (!this.isRealistic) {
             this.rotationPerSecond *= 600;
         }
     },
