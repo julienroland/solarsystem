@@ -1,5 +1,6 @@
 //Dependencies
-var Earth = require('./planets/earth');
+var Earth = require('./theSolarSystem/earth');
+var Sun = require('./theSolarSystem/sun');
 //Config
 var container = document.getElementById('scene');
 var scene;
@@ -29,26 +30,6 @@ function appendScene() {
 }
 function addLights() {
     light = new THREE.AmbientLight(0xffffff)
-
-    shadowLight = new THREE.DirectionalLight(0xffffff, .8);
-    shadowLight.position.set(200, 200, 200);
-    shadowLight.castShadow = true;
-    shadowLight.shadowDarkness = .2;
-    shadowLight.shadowCameraNear = 0.01
-    shadowLight.shadowCameraFar = 15
-    shadowLight.shadowCameraFov = 45
-
-    shadowLight.shadowCameraLeft = -1
-    shadowLight.shadowCameraRight = 1
-    shadowLight.shadowCameraTop = 1
-    shadowLight.shadowCameraBottom = -1
-
-    shadowLight.shadowBias = 0.001
-    shadowLight.shadowDarkness = 0.2
-
-    shadowLight.shadowMapWidth = 1024
-    shadowLight.shadowMapHeight = 1024
-    scene.add(shadowLight);
     scene.add(light);
 }
 function isDev() {
@@ -60,8 +41,7 @@ function addCamera() {
         aspectRatio,
         nearPlane,
         farPlane);
-    camera.position.z = 500;
-    camera.position.y = 300;
+    camera.position.z = -400;
     camera.lookAt(new THREE.Vector3(0, 200, 0));
 }
 function addControls() {
@@ -88,8 +68,8 @@ function configureScene() {
     WIDTH = window.innerWidth;
     aspectRatio = WIDTH / HEIGHT;
     fieldOfView = 60;
-    nearPlane = 100;
-    farPlane = 20000;
+    nearPlane = .1;
+    farPlane = 10000;
     renderer = new THREE.WebGLRenderer({alpha: true, antialias: true});
     renderer.setClearColor(0x000000, 1);
     renderer.setSize(WIDTH, HEIGHT);
@@ -98,9 +78,7 @@ function configureScene() {
     if (isDev()) {
         addControls();
     }
-    //addLights();
-
-
+    addLights();
 }
 function animate(number) {
     render();
@@ -130,9 +108,15 @@ function gui() {
 function addPlanets() {
     var earth = Earth.make(scene);
     var earthAnimations = earth.getAnimations();
-    for (var animation in earthAnimations) {
-        onRenderContainer.push(earthAnimations[animation]);
-    }
+    earthAnimations.forEach(function (animation) {
+        onRenderContainer.push(animation);
+    });
+
+    var sun = Sun.make(scene);
+    var sunAnimations = sun.getAnimations();
+    sunAnimations.forEach(function (animation) {
+        onRenderContainer.push(animation);
+    });
 }
 function init() {
     configureScene();

@@ -2,13 +2,20 @@ var Planets = require('../lib/threex.planets');
 var Atmospheres = require('../lib/threex.atmospherematerial');
 //@math var Degree = require('../lib/degreeInRadian');
 var Earth = {
-    timeToFullSelfRotation: 849817.4724,
+    //@math 60 * 60 * 23.5603 (23h56 03')
+    timeToFullSelfRotation: 84817.4724,
     isRealistic: false,
+    diameter: 3,
+    atmosphereRadius: this.diameter + (this.diameter) / 10,
+    atmosphereSize: (this.diameter) / 100,
+    axialTilt: 23.4,
+    //@math return (Degree.convert(360) / this.timeToFullSelfRotation);
+    rotationPerSecond: 0.000007393570389010043,
+    orbitRadius: 35643,
     animations: [],
+
     make: function (scene, isRealistic) {
-        if (typeof isRealistic != "undefined") {
-            this.isRealistic = isRealistic;
-        }
+        this.manageRealism(isRealistic);
         this.init(scene);
         this.createMesh();
         this.createAtmosphere();
@@ -20,9 +27,12 @@ var Earth = {
     },
     init: function (scene) {
         this.containerEarth = new THREE.Object3D();
-        this.containerEarth.rotateZ(-23.4 * Math.PI / 180);
-        this.containerEarth.position.z = 0;
-        this.containerEarth.scale.set(300, 300, 300);
+        this.containerEarth.rotateZ(this.axialTilt * Math.PI / 180);
+        //Sun diameter * 109 = radius of earth's orbit (149,597,870 km) (35643)
+        this.containerEarth.position.x = this.orbitRadius;
+        //this.containerEarth.position.z = 35643;
+        //Earth is more or less 109 times smaller than sun
+        this.containerEarth.scale.set(this.diameter, this.diameter, this.diameter);
         scene.add(this.containerEarth);
     },
     createMesh: function () {
@@ -32,11 +42,11 @@ var Earth = {
         this.earthMesh.castShadow = true;
         this.containerEarth.add(this.earthMesh);
         this.registerAnimation(function (delta, now) {
-            Earth.earthMesh.rotation.y += Earth.isRealistic ? Earth.getRotationPerSecond() / 60 : Earth.getRotationPerSecond() * 600 / 60;
+            Earth.earthMesh.rotation.y += Earth.rotationPerSecond / 60;
         })
     },
     createAtmosphere: function () {
-        var geometry = new THREE.SphereGeometry(0.5, 32, 32)
+        var geometry = new THREE.SphereGeometry(this.atmosphereSize, this.atmosphereRadius, this.atmosphereRadius);
         var material = Atmospheres.createAtmosphereMaterial()
         material.uniforms.glowColor.value.set(0x00b3ff)
         material.uniforms.coeficient.value = 0.8
@@ -45,7 +55,7 @@ var Earth = {
         this.atmosphere1.scale.multiplyScalar(1.01);
         this.containerEarth.add(this.atmosphere1);
 
-        var geometry = new THREE.SphereGeometry(0.5, 32, 32)
+        var geometry = new THREE.SphereGeometry(this.atmosphereSize, this.atmosphereRadius, this.atmosphereRadius);
         var material = Atmospheres.createAtmosphereMaterial()
         material.side = THREE.BackSide
         material.uniforms.glowColor.value.set(0x00b3ff)
@@ -62,17 +72,27 @@ var Earth = {
         this.earthCloud.castShadow = true;
         this.containerEarth.add(this.earthCloud);
         this.registerAnimation(function (delta, now) {
-            Earth.earthCloud.rotation.y += Earth.isRealistic ? Earth.getRotationPerSecond() + 0.000001 / 60 : Earth.getRotationPerSecond() + 0.000001 * 600 / 60;
+            Earth.earthCloud.rotation.y += (Earth.rotationPerSecond * 1.2) / 60;
         });
+    },
+    manageRealism: function (isRealistic) {
+        if (typeof isRealistic != "undefined") {
+            this.isRealistic = isRealistic;
+        }
+
+        if (!this.isRealistic) {
+            this.diameter *= 10;
+        }
+        if (!this.isRealistic) {
+            this.orbitRadius /= 100;
+        }
+        if (!this.isRealistic) {
+            this.rotationPerSecond *= 600;
+        }
     },
     registerAnimation: function (callable) {
         this.animations.push(callable);
-    },
-    getRotationPerSecond: function () {
-        //@math return (Degree.convert(360) / this.timeToFullSelfRotation);
-        return 0.000007393570389010043;
     }
 };
-
 
 module.exports = Earth;
