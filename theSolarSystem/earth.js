@@ -48,7 +48,6 @@ var Earth = {
         })
     },
     createAtmosphere: function () {
-        console.log(this.atmosphereSize);
         var geometry = new THREE.SphereGeometry(this.atmosphereSize, this.atmosphereRadius, this.atmosphereRadius);
         var material = Atmospheres.createAtmosphereMaterial()
         material.uniforms.glowColor.value.set(0x00b3ff)
