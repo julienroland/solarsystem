@@ -121,27 +121,6 @@ function animate(number) {
 function render() {
     renderer.render(scene, camera);
 }
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-function hexToRgb(hex) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null;
-}
-
-function generateColor() {
-    var letters = '0123456789ABCDEF'.split('');
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-        color += letters[Math.round(Math.random() * 15)];
-    }
-    var rgb = hexToRgb(color);
-    return new THREE.Color("rgb(" + rgb.r + "," + rgb.g + "," + rgb.b + ")");
-}
 function gui() {
     gui = new dat.GUI();
     var params = {
