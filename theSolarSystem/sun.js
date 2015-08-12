@@ -46,35 +46,43 @@ var Sun = {
         scene.add(this.light);
     },
     addParticules: function (scene) {
-        var particleCount = 5000;
-        var particles = new THREE.Geometry();
-        var PI2 = Math.PI * 2;
-        var pMaterial = new THREE.ParticleBasicMaterial({
-            color: Math.random() * 0x808008 + 0x808080,
-            program: function (context) {
-                context.beginPath();
-                context.arc(0, 0, 1, 0, PI2, true);
-                context.closePath();
-                context.fill();
-            }
+        this.particleGroup = new SPE.Group({
+            texture: THREE.ImageUtils.loadTexture('./images/particle1.jpeg'),
+            maxAge: 5,
+            hasPerspective: true,
+            blending: THREE.AdditiveBlending,
+            colorize: true
         });
+        var particleEmitter = new SPE.Emitter({
+            type: 'sphere',
+            position: new THREE.Vector3(0, 0, 0),
 
-        var particuleMaxDiameter = this.diameter + (this.diameter / 100);
-        for (var p = 0; p < particleCount; p++) {
+            radius: this.diameter,
+            radiusSpread: 2,
+            radiusSpreadClamp: 2,
+            radiusScale: new THREE.Vector3(0.51, 0.51, 0.51),
 
-            var pX = Int.getRandom(-this.diameter / 2, this.diameter);
-            var pY = Int.getRandom(-this.diameter / 2, this.diameter);
-            var pZ = Int.getRandom(-this.diameter / 2, this.diameter);
-            particle = new THREE.Vector3(pX, pY, pZ);
+            speed: 1,
+            speedSpread: 2,
+            //colorStart: new THREE.Color('red'),
+            //colorEnd: new THREE.Color('red'),
 
-            particles.vertices.push(particle);
-        }
 
-        var particleSystem = new THREE.ParticleSystem(
-            particles,
-            pMaterial);
-
-        scene.add(particleSystem);
+            sizeStart: 200,
+            sizeMiddle: 100,
+            sizeEnd: 50,
+            opacityStart: 1,
+            opacityMiddle: 0.8,
+            opacityEnd: 0,
+            //particlesPerSecond: 10,
+            isStatic: 0,
+            particleCount: 200
+        });
+        this.particleGroup.addEmitter(particleEmitter);
+        scene.add(this.particleGroup.mesh);
+        this.registerAnimation(function (delta) {
+            Sun.particleGroup.tick(delta);
+        });
     },
     registerAnimation: function (callable) {
         this.animations.push(callable);
