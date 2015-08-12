@@ -12,6 +12,7 @@ var nearPlane;
 var farPlane;
 var controls;
 var gui;
+var clock = new THREE.Clock();
 //Lights
 var light;
 var shadowLight;
@@ -23,7 +24,6 @@ var WIDTH;
 
 //Global
 var onRenderContainer = [];
-var lastTimeMsec = null
 
 function appendScene() {
     container.appendChild(renderer.domElement);
@@ -58,11 +58,12 @@ function addControls() {
     controls.dynamicDampingFactor = 0.3;
 
     controls.keys = [65, 83, 68];
-    controls.addEventListener('change', render);
+    controls.addEventListener('change', function(){
+        render(clock.getDelta());
+    });
 }
 function configureScene() {
     scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0x050505, 2000, 4000);
 
     HEIGHT = window.innerHeight;
     WIDTH = window.innerWidth;
@@ -71,31 +72,25 @@ function configureScene() {
     nearPlane = .1;
     farPlane = 10000;
     renderer = new THREE.WebGLRenderer({alpha: true, antialias: true});
-    renderer.setClearColor(0x000000, 1);
+    renderer.setClearColor(0x000000);
     renderer.setSize(WIDTH, HEIGHT);
-    renderer.shadowMap.enabled = true;
+    renderer.shadowMapEnabled = true;
     addCamera();
     if (isDev()) {
         addControls();
     }
     addLights();
 }
-function animate(number) {
-    render();
-    if (typeof number == 'undefined') {
-        number = 0;
-    }
-    lastTimeMsec = lastTimeMsec || number - 1000 / 60
-    var deltaMsec = Math.min(200, number - lastTimeMsec)
-    lastTimeMsec = number
-    // call each update function
-    onRenderContainer.forEach(function (onRenderContainer) {
-        onRenderContainer(deltaMsec / 1000, number / 1000)
-    })
+
+function animate() {
     requestAnimationFrame(animate);
+    render(clock.getDelta());
     controls.update();
 }
-function render() {
+function render(delta) {
+    onRenderContainer.forEach(function (onRenderContainer) {
+        onRenderContainer(delta);
+    });
     renderer.render(scene, camera);
 }
 function gui() {
