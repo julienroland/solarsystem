@@ -30,14 +30,17 @@ var Sun = {
         scene.add(this.containerSun);
     },
     createMesh: function () {
-        this.sunMesh = Planets.Planets.createSun();
-        this.sunMesh.rotation.y = 0;
-        this.sunMesh.receiveShadow = true;
-        this.sunMesh.castShadow = true;
-        this.containerSun.add(this.sunMesh);
-        this.registerAnimation(function (delta, now) {
-            Sun.sunMesh.rotation.y += Sun.rotationPerSecond / 60;
-        });
+        var options = {radius: this.diameter, spectral: 0.656};
+        Planets.Planets.createSun(function (sun) {
+            Sun.sunMesh = sun;
+            Sun.sunMesh.rotation.y = 0;
+            Sun.sunMesh.receiveShadow = true;
+            Sun.sunMesh.castShadow = true;
+            Sun.containerSun.add(Sun.sunMesh);
+            Sun.registerAnimation(function (delta, now) {
+                Sun.sunMesh.rotation.y += Sun.rotationPerSecond / 60;
+            });
+        }, options);
     },
     addLight: function (scene) {
         this.light = new THREE.PointLight(0xffffff, 1, this.lightDistance);
@@ -60,23 +63,17 @@ var Sun = {
             radius: this.diameter,
             radiusSpread: 2,
             radiusSpreadClamp: 2,
-            radiusScale: new THREE.Vector3(0.51, 0.51, 0.51),
-
+            radiusScale: new THREE.Vector3(0.50, 0.50, 0.50),
             speed: 1,
             speedSpread: 2,
-            //colorStart: new THREE.Color('red'),
-            //colorEnd: new THREE.Color('red'),
-
-
-            sizeStart: 200,
-            sizeMiddle: 100,
-            sizeEnd: 50,
+            sizeStart: 100,
+            sizeMiddle: 50,
+            sizeEnd: 25,
             opacityStart: 1,
             opacityMiddle: 0.8,
             opacityEnd: 0,
-            //particlesPerSecond: 10,
             isStatic: 0,
-            particleCount: 200
+            particleCount: 100
         });
         this.particleGroup.addEmitter(particleEmitter);
         scene.add(this.particleGroup.mesh);

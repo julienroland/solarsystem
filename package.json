@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/julienroland/solarsystem",
   "dependencies": {
-    "browserify": "^11.0.1"
+    "browserify": "^11.0.1",
+    "jquery": "^2.1.4"
   }
 }
