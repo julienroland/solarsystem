@@ -1,5 +1,6 @@
 var Planets = require('../lib/threex.planets');
 var Atmospheres = require('../lib/threex.atmospherematerial');
+const PATH = "./images/"
 //@math var Degree = require('../lib/degreeInRadian');
 var Earth = {
     //@math 60 * 60 * 23.5603 (23h56 03')
@@ -38,7 +39,19 @@ var Earth = {
         this.atmosphereSize = this.diameter / 60;
     },
     createMesh: function () {
-        this.earthMesh = Planets.Planets.createEarth();
+        var geometry = new THREE.SphereGeometry(0.5, 32, 32)
+        var material = new THREE.MeshPhongMaterial({
+            map: THREE.ImageUtils.loadTexture(PATH + 'earthdiffuse.jpg'),
+            bumpMap: THREE.ImageUtils.loadTexture(PATH + 'earthbump1k.jpg'),
+            bumpScale: 1,
+            specularMap: THREE.ImageUtils.loadTexture(PATH + 'earthspec1k.jpg'),
+            specular: new THREE.Color('grey')
+        })
+        material.map.minFilter = THREE.LinearFilter;
+        material.bumpMap.minFilter = THREE.LinearFilter;
+        material.specularMap.minFilter = THREE.LinearFilter;
+        this.earthMesh = new THREE.Mesh(geometry, material)
+
         this.earthMesh.rotation.y = 0;
         this.earthMesh.receiveShadow = true;
         this.earthMesh.castShadow = true;

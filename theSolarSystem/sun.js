@@ -1,5 +1,5 @@
-var Planets = require('../lib/threex.planets');
 var Int = require('../lib/int');
+var Atmospheres = require('../lib/threex.atmospherematerial');
 const PATH = "./images/"
 //@math var Degree = require('../lib/degreeInRadian');
 var Sun = {
@@ -7,7 +7,6 @@ var Sun = {
     isRealistic: false,
     lightDistance: 10000,
     diameter: 3270,
-    lenseflareDepth: 327,
     axialTilt: 7.25,
     //rotationPerSecond: 1.4604583484464283,
     rotationPerSecond: 0.000000014604583484464283,
@@ -33,7 +32,7 @@ var Sun = {
         });
     },
     createMesh: function () {
-        var geometry = new THREE.SphereGeometry(0.5, 20, 20);
+        var geometry = new THREE.SphereGeometry(0.5, 40, 40);
         var texture = THREE.ImageUtils.loadTexture(PATH + 'sunmap.jpg');
         var material = new THREE.MeshPhongMaterial({
             map: texture,
@@ -45,21 +44,22 @@ var Sun = {
         this.sunMesh.position.z = 0;
         this.sunMesh.receiveShadow = true;
         this.sunMesh.castShadow = true;
-        this.sunMesh.scale.set(this.diameter / 7 - this.lenseflareDepth, this.diameter / 7 - this.lenseflareDepth, this.diameter / 7 - this.lenseflareDepth);
+        this.sunMesh.scale.set(this.diameter, this.diameter, this.diameter);
         this.sunMesh.depthWrite = false;
         this.containerSun.add(this.sunMesh);
     },
     addLensFlare: function () {
-        var lensflarecorona = THREE.ImageUtils.loadTexture(PATH + 'corona.png');
-        var lensflaretexture0 = THREE.ImageUtils.loadTexture(PATH + 'lensflare0-white.png');
+        if (this.isRealistic) {
+            var lensflaretexture0 = THREE.ImageUtils.loadTexture(PATH + 'lensflare0-white.png');
+        } else {
+            var lensflaretexture0 = THREE.ImageUtils.loadTexture(PATH + 'lensflare0.png');
+        }
         var lensflaretexture1 = THREE.ImageUtils.loadTexture(PATH + 'lensflare1.png');
         var lensflaretexture2 = THREE.ImageUtils.loadTexture(PATH + 'lensflare2.png');
         var lensflaretexture3 = THREE.ImageUtils.loadTexture(PATH + 'lensflare3.png');
         var color = new THREE.Color(0xffffff);
-        color.offsetHSL(0.08, 0.5, 0.5);
-        this.lensflare = new THREE.LensFlare(lensflarecorona, this.diameter * 2, 0.0, THREE.AdditiveBlending, color);
-        this.lensflare.add(lensflaretexture0, this.diameter, 0.0, THREE.AdditiveAlphaBlending, color, 0.6);
-
+        color.setHSL(0.55, 0.9, 1);
+        this.lensflare = new THREE.LensFlare(lensflaretexture0, this.diameter * 2, 0.0, THREE.AdditiveBlending, color);
         this.lensflare.add(lensflaretexture1, this.diameter, 0.0, THREE.AdditiveBlending, color, 0.2);
         this.lensflare.add(lensflaretexture1, this.diameter / 2, 0.0, THREE.AdditiveBlending, color, 0.5);
 
@@ -150,7 +150,6 @@ var Sun = {
 
         if (!this.isRealistic) {
             this.diameter /= 10;
-            this.lenseflareDepth /= 10;
             this.rotationPerSecond *= 60000;
         }
     }
