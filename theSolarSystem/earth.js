@@ -59,7 +59,9 @@ var Earth = {
 console.log($(document).load(SHADERS + '/dayNight.vsh'));
         var material = new THREE.ShaderMaterial({
             uniforms: uniforms,
-            vertexShader: $(document).load(SHADERS + '/dayNight.vsh'),
+            vertexShader: $(document).load(SHADERS + '/dayNight.vsh',function(shader){
+                console.log(shader);
+            }),
             fragmentShader: $(document).load(SHADERS + '/dayNight.vsh'),
             bumpMap: THREE.ImageUtils.loadTexture(PATH + 'earthbump1k.jpg'),
             bumpScale: 1,
