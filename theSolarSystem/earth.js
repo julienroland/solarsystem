@@ -1,4 +1,3 @@
-var Planets = require('../lib/threex.planets');
 var Atmospheres = require('../lib/threex.atmospherematerial');
 const PATH = "./images/"
 //@math var Degree = require('../lib/degreeInRadian');
@@ -82,7 +81,13 @@ var Earth = {
     },
 
     createClouds: function () {
-        this.earthCloud = Planets.Planets.createEarthCloud();
+        var geometry = new THREE.SphereGeometry(0.51, 32, 32)
+        var material = new THREE.MeshPhongMaterial({
+            map: THREE.ImageUtils.loadTexture(PATH + 'earthclouds.png'),
+            side: THREE.DoubleSide,
+            transparent: true
+        })
+        this.earthCloud = new THREE.Mesh(geometry, material)
         this.earthCloud.receiveShadow = true;
         this.earthCloud.castShadow = true;
         this.containerEarth.add(this.earthCloud);
