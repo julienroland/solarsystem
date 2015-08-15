@@ -1,5 +1,7 @@
 var Atmospheres = require('../lib/threex.atmospherematerial');
+var $ = require('jquery');
 const PATH = "./images/"
+const SHADERS = "./theSolarSystem/earthShaders"
 //@math var Degree = require('../lib/degreeInRadian');
 var Earth = {
     //@math 60 * 60 * 23.5603 (23h56 03')
@@ -38,19 +40,39 @@ var Earth = {
         //Earth is more or less 109 times smaller than sun
         var geometry = new THREE.SphereGeometry(this.diameter, this.nbpoly, this.nbpoly)
         var texture = THREE.ImageUtils.loadTexture(PATH + 'earthdiffuse.jpg');
-        var material = new THREE.MeshPhongMaterial({
-            map: texture,
+        var nightTexture = THREE.ImageUtils.loadTexture(PATH + "/earthnight.jpg");
+        //var material = new THREE.MeshPhongMaterial({
+        //    map: texture,
+        //    bumpMap: THREE.ImageUtils.loadTexture(PATH + 'earthbump1k.jpg'),
+        //    bumpScale: 1,
+        //    specularMap: THREE.ImageUtils.loadTexture(PATH + 'earthspec1k.jpg'),
+        //    specular: new THREE.Color('grey')
+        //});
+        var uniforms = {
+            sunDirection: {type: "v3", value: new THREE.Vector3(0, 1, 0)},
+            dayTexture: {type: "t", value: 0, texture: texture},
+            nightTexture: {type: "t", value: 1, texture: nightTexture}
+        };
+
+        uniforms.dayTexture.texture.wrapS = uniforms.dayTexture.texture.wrapT = THREE.Repeat;
+        uniforms.nightTexture.texture.wrapS = uniforms.nightTexture.texture.wrapT = THREE.Repeat;
+console.log($(document).load(SHADERS + '/dayNight.vsh'));
+        var material = new THREE.ShaderMaterial({
+            uniforms: uniforms,
+            vertexShader: $(document).load(SHADERS + '/dayNight.vsh'),
+            fragmentShader: $(document).load(SHADERS + '/dayNight.vsh'),
             bumpMap: THREE.ImageUtils.loadTexture(PATH + 'earthbump1k.jpg'),
             bumpScale: 1,
             specularMap: THREE.ImageUtils.loadTexture(PATH + 'earthspec1k.jpg'),
             specular: new THREE.Color('grey')
+
         });
         //texture.needsUpdate = true;
         //obj.mesh.material.uniforms.texture = THREE.ImageUtils.loadTexture(PATH+"earthnight.jpg");
         material.shininess = 20;
-        material.map.minFilter = THREE.LinearFilter;
-        material.bumpMap.minFilter = THREE.LinearFilter;
-        material.specularMap.minFilter = THREE.LinearFilter;
+        //material.map.minFilter = THREE.LinearFilter;
+        //material.bumpMap.minFilter = THREE.LinearFilter;
+        //material.specularMap.minFilter = THREE.LinearFilter;
         this.earthMesh = new THREE.Mesh(geometry, material)
 
         this.earthMesh.rotation.y = 0;
@@ -67,7 +89,7 @@ var Earth = {
             map: THREE.ImageUtils.loadTexture(PATH + 'earthclouds.png'),
             side: THREE.FrontSide,
             transparent: true,
-            opacity:0.7
+            opacity: 0.7
         });
         this.earthCloud = new THREE.Mesh(geometry, material)
         this.earthCloud.receiveShadow = true;
