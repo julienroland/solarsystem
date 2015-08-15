@@ -75,6 +75,8 @@ function configureScene() {
     renderer.setClearColor(0x000000);
     renderer.setSize(WIDTH, HEIGHT);
     renderer.shadowMapEnabled = true;
+    renderer.gammaInput = true;
+    renderer.gammaOutput = true;
     addCamera();
     if (isDev()) {
         addControls();
@@ -89,7 +91,7 @@ function animate() {
 }
 function render(delta) {
     onRenderContainer.forEach(function (onRenderContainer) {
-        onRenderContainer(delta);
+        onRenderContainer(delta, camera);
     });
     renderer.render(scene, camera);
 }
