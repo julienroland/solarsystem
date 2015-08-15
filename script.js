@@ -1,6 +1,7 @@
 //Dependencies
 var Earth = require('./theSolarSystem/earth');
 var Sun = require('./theSolarSystem/sun');
+var Skybox = require('./theSolarSystem/skybox');
 //Config
 var container = document.getElementById('scene');
 var scene;
@@ -13,6 +14,7 @@ var farPlane;
 var controls;
 var gui;
 var clock = new THREE.Clock();
+var isRealistic = false;
 //Lights
 var light;
 
@@ -57,7 +59,7 @@ function addControls() {
     controls.dynamicDampingFactor = 0.3;
 
     controls.keys = [65, 83, 68];
-    controls.addEventListener('change', function(){
+    controls.addEventListener('change', function () {
         render(clock.getDelta());
     });
 }
@@ -69,7 +71,7 @@ function configureScene() {
     aspectRatio = WIDTH / HEIGHT;
     fieldOfView = 60;
     nearPlane = .1;
-    farPlane = 10000;
+    farPlane = 1000000000;
     renderer = new THREE.WebGLRenderer({alpha: true, antialias: true});
     renderer.setClearColor(0x000000);
     renderer.setSize(WIDTH, HEIGHT);
@@ -101,22 +103,31 @@ function gui() {
     };
     gui.add(params, 'test');
 }
-function addPlanets() {
-    var earth = Earth.make(scene);
-    var earthAnimations = earth.getAnimations();
-    earthAnimations.forEach(function (animation) {
-        onRenderContainer.push(animation);
-    });
-
-    var sun = Sun.make(scene);
+function addSkybox() {
+    Skybox.make(scene, isRealistic);
+}
+function addSolarSystem() {
+    addSun();
+    addPlanets();
+}
+function addSun() {
+    var sun = Sun.make(scene, isRealistic);
     var sunAnimations = sun.getAnimations();
     sunAnimations.forEach(function (animation) {
         onRenderContainer.push(animation);
     });
 }
+function addPlanets() {
+    var earth = Earth.make(scene, isRealistic);
+    var earthAnimations = earth.getAnimations();
+    earthAnimations.forEach(function (animation) {
+        onRenderContainer.push(animation);
+    });
+}
 function init() {
     configureScene();
-    addPlanets();
+    addSkybox();
+    addSolarSystem();
     appendScene();
     if (isDev()) {
         gui();

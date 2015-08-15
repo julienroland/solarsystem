@@ -1,11 +1,11 @@
 var Int = require('../lib/int');
-var Atmospheres = require('../lib/threex.atmospherematerial');
 const PATH = "./images/"
 //@math var Degree = require('../lib/degreeInRadian');
 var Sun = {
     timeToFullSelfRotation: 849817.4724,
     isRealistic: false,
-    lightDistance: 10000,
+    lightDistance: 1000000000,
+    lightIntensity: 2,
     diameter: 3270,
     axialTilt: 7.25,
     //rotationPerSecond: 1.4604583484464283,
@@ -96,7 +96,7 @@ var Sun = {
         });
     },
     addLight: function (scene) {
-        this.light = new THREE.PointLight(0xffffff, 1, this.lightDistance);
+        this.light = new THREE.PointLight(0xffffff, this.lightIntensity, this.lightDistance);
         this.light.position.set(0, 0, 0);
         this.light.scale.set(this.diameter, this.diameter, this.diameter);
         scene.add(this.light);
@@ -151,6 +151,8 @@ var Sun = {
         if (!this.isRealistic) {
             this.diameter /= 10;
             this.rotationPerSecond *= 60000;
+            this.lightDistance /= 10;
+            this.lightIntensity /= 2;
         }
     }
 };

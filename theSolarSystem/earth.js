@@ -6,6 +6,7 @@ var Earth = {
     timeToFullSelfRotation: 84817.4724,
     isRealistic: false,
     diameter: 3,
+    nbpoly: 32,
     atmosphereRadius: undefined,
     atmosphereSize: undefined,
     axialTilt: 23.4,
@@ -30,22 +31,23 @@ var Earth = {
         this.containerEarth.rotateZ(this.axialTilt * Math.PI / 180);
         //Sun diameter * 109 = radius of earth's orbit (149,597,870 km) (35643)
         this.containerEarth.position.x = this.orbitRadius;
-        //Earth is more or less 109 times smaller than sun
-        this.containerEarth.scale.set(this.diameter, this.diameter, this.diameter);
         scene.add(this.containerEarth);
-
-        this.atmosphereRadius = this.diameter + (this.diameter / 2);
-        this.atmosphereSize = this.diameter / 60;
+        this.atmosphereRadius = this.diameter;
     },
     createMesh: function () {
-        var geometry = new THREE.SphereGeometry(0.5, 32, 32)
+        //Earth is more or less 109 times smaller than sun
+        var geometry = new THREE.SphereGeometry(this.diameter, this.nbpoly, this.nbpoly)
+        var texture = THREE.ImageUtils.loadTexture(PATH + 'earthdiffuse.jpg');
         var material = new THREE.MeshPhongMaterial({
-            map: THREE.ImageUtils.loadTexture(PATH + 'earthdiffuse.jpg'),
+            map: texture,
             bumpMap: THREE.ImageUtils.loadTexture(PATH + 'earthbump1k.jpg'),
             bumpScale: 1,
             specularMap: THREE.ImageUtils.loadTexture(PATH + 'earthspec1k.jpg'),
-            specular: new THREE.Color('grey')
-        })
+            specular: new THREE.Color('0xffffff')
+        });
+        //texture.needsUpdate = true;
+        //obj.mesh.material.uniforms.texture = THREE.ImageUtils.loadTexture(PATH+"earthnight.jpg");
+        material.shininess = 60;
         material.map.minFilter = THREE.LinearFilter;
         material.bumpMap.minFilter = THREE.LinearFilter;
         material.specularMap.minFilter = THREE.LinearFilter;
@@ -59,22 +61,11 @@ var Earth = {
             Earth.earthMesh.rotation.y += Earth.rotationPerSecond / 60;
         })
     },
-    createAtmosphere: function () {
-        var geometry = new THREE.SphereGeometry(this.atmosphereSize, this.atmosphereRadius, this.atmosphereRadius);
-        var material = Atmospheres.createAtmosphereMaterial()
-        material.uniforms.glowColor.value.set(0x00b3ff)
-        material.uniforms.coeficient.value = 1
-        material.uniforms.power.value = 6.5
-        this.atmosphere1 = new THREE.Mesh(geometry, material);
-        this.atmosphere1.scale.multiplyScalar(1.1);
-        this.containerEarth.add(this.atmosphere1);
-    },
-
     createClouds: function () {
-        var geometry = new THREE.SphereGeometry(0.51, 32, 32)
+        var geometry = new THREE.SphereGeometry(this.diameter, this.nbpoly, this.nbpoly)
         var material = new THREE.MeshPhongMaterial({
             map: THREE.ImageUtils.loadTexture(PATH + 'earthclouds.png'),
-            side: THREE.DoubleSide,
+            side: THREE.FrontSide,
             transparent: true
         })
         this.earthCloud = new THREE.Mesh(geometry, material)
@@ -84,6 +75,16 @@ var Earth = {
         this.registerAnimation(function (delta, now) {
             Earth.earthCloud.rotation.y += (Earth.rotationPerSecond * 1.2) / 60;
         });
+    },
+    createAtmosphere: function () {
+        var geometry = new THREE.SphereGeometry(this.diameter, this.nbpoly, this.nbpoly);
+        var material = Atmospheres.createAtmosphereMaterial()
+        material.uniforms.glowColor.value.set(0x00b3ff)
+        material.uniforms.coeficient.value = 1
+        material.uniforms.power.value = 6.5
+        this.atmosphere1 = new THREE.Mesh(geometry, material);
+        this.atmosphere1.scale.multiplyScalar(1.04);
+        this.containerEarth.add(this.atmosphere1);
     },
     manageRealism: function (isRealistic) {
         if (typeof isRealistic != "undefined") {
