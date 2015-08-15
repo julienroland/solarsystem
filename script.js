@@ -15,7 +15,6 @@ var gui;
 var clock = new THREE.Clock();
 //Lights
 var light;
-var shadowLight;
 
 //Constants
 const ENV = 'dev';
@@ -81,7 +80,7 @@ function configureScene() {
     if (isDev()) {
         addControls();
     }
-    addLights();
+    //addLights();
 }
 
 function animate() {
