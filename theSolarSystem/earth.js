@@ -63,21 +63,11 @@ var Earth = {
         var geometry = new THREE.SphereGeometry(this.atmosphereSize, this.atmosphereRadius, this.atmosphereRadius);
         var material = Atmospheres.createAtmosphereMaterial()
         material.uniforms.glowColor.value.set(0x00b3ff)
-        material.uniforms.coeficient.value = 0.8
-        material.uniforms.power.value = 2.0
+        material.uniforms.coeficient.value = 1
+        material.uniforms.power.value = 6.5
         this.atmosphere1 = new THREE.Mesh(geometry, material);
-        this.atmosphere1.scale.multiplyScalar(1.01);
+        this.atmosphere1.scale.multiplyScalar(1.1);
         this.containerEarth.add(this.atmosphere1);
-
-        var geometry = new THREE.SphereGeometry(this.atmosphereSize, this.atmosphereRadius, this.atmosphereRadius);
-        var material = Atmospheres.createAtmosphereMaterial()
-        material.side = THREE.BackSide
-        material.uniforms.glowColor.value.set(0x00b3ff)
-        material.uniforms.coeficient.value = 0.5
-        material.uniforms.power.value = 4.0
-        this.atmosphere2 = new THREE.Mesh(geometry, material);
-        this.atmosphere2.scale.multiplyScalar(1.15);
-        this.containerEarth.add(this.atmosphere2);
     },
 
     createClouds: function () {
