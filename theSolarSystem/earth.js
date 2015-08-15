@@ -43,11 +43,11 @@ var Earth = {
             bumpMap: THREE.ImageUtils.loadTexture(PATH + 'earthbump1k.jpg'),
             bumpScale: 1,
             specularMap: THREE.ImageUtils.loadTexture(PATH + 'earthspec1k.jpg'),
-            specular: new THREE.Color('0xffffff')
+            specular: new THREE.Color('grey')
         });
         //texture.needsUpdate = true;
         //obj.mesh.material.uniforms.texture = THREE.ImageUtils.loadTexture(PATH+"earthnight.jpg");
-        material.shininess = 60;
+        material.shininess = 20;
         material.map.minFilter = THREE.LinearFilter;
         material.bumpMap.minFilter = THREE.LinearFilter;
         material.specularMap.minFilter = THREE.LinearFilter;
@@ -66,11 +66,13 @@ var Earth = {
         var material = new THREE.MeshPhongMaterial({
             map: THREE.ImageUtils.loadTexture(PATH + 'earthclouds.png'),
             side: THREE.FrontSide,
-            transparent: true
-        })
+            transparent: true,
+            opacity:0.7
+        });
         this.earthCloud = new THREE.Mesh(geometry, material)
         this.earthCloud.receiveShadow = true;
         this.earthCloud.castShadow = true;
+        this.earthCloud.scale.multiplyScalar(1.01);
         this.containerEarth.add(this.earthCloud);
         this.registerAnimation(function (delta, now) {
             Earth.earthCloud.rotation.y += (Earth.rotationPerSecond * 1.2) / 60;
