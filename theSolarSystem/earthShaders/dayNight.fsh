@@ -15,7 +15,7 @@ void main( void ) {
     float cosineAngleSunToNormal = dot(normalize(vNormal), sunDirection);
 
     // sharpen the edge beween the transition
-    cosineAngleSunToNormal = clamp( cosineAngleSunToNormal * 10.0, -1.0, 1.0);
+     cosineAngleSunToNormal = clamp( cosineAngleSunToNormal * 10.0, -1.0, 1.0);
 
     // convert to 0 to 1 for mixing
     float mixAmount = cosineAngleSunToNormal * 0.5 + 0.5;

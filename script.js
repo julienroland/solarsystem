@@ -118,10 +118,10 @@ function addSun() {
     });
 }
 function addPlanets() {
-    var earth = Earth.make(scene, isRealistic);
-    var earthAnimations = earth.getAnimations();
-    earthAnimations.forEach(function (animation) {
-        onRenderContainer.push(animation);
+    Earth.make({scene: scene, isRealistic: isRealistic}, function (animations) {
+        animations.forEach(function (animation) {
+            onRenderContainer.push(animation);
+        });
     });
 }
 function init() {
