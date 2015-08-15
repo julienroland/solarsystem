@@ -21,8 +21,8 @@ var Earth = {
     make: function (options, callback) {
         this.setup(options);
         var self = this;
-        this.load(function () {
-            //self.shaders = shaders;
+        this.load(function (shaders) {
+            self.shaders = shaders;
             self.manageRealism(self.isRealistic);
             self.init(self.scene);
             self.createMesh();
@@ -44,46 +44,39 @@ var Earth = {
         this.atmosphereRadius = this.diameter;
     },
     load: function (callback) {
-        callback();
-        //ShaderLoader.load([SHADERS + 'dayNight'], callback);
+        //callback();
+        ShaderLoader.load([SHADERS + 'dayNight'], callback);
     },
     createMesh: function () {
         //Earth is more or less 109 times smaller than sun
         var geometry = new THREE.SphereGeometry(this.diameter, this.nbpoly, this.nbpoly)
         var texture = THREE.ImageUtils.loadTexture(PATH + 'earthdiffuse.jpg');
         var nightTexture = THREE.ImageUtils.loadTexture(PATH + "earthnight.jpg");
-        var material = new THREE.MeshPhongMaterial({
-            map: texture,
-            bumpMap: THREE.ImageUtils.loadTexture(PATH + 'earthbump1k.jpg'),
-            bumpScale: 1,
-            specularMap: THREE.ImageUtils.loadTexture(PATH + 'earthspec1k.jpg'),
-            specular: new THREE.Color('grey')
-        });
-        console.log(texture);
-        //var uniforms = {
-        //    sunDirection: {type: "v3", value: new THREE.Vector3(1, 0, 0)},
-        //    dayTexture: {type: "t", value: 0, texture: texture},
-        //    nightTexture: {type: "t", value: 1, texture: nightTexture}
-        //};
-        //
-        //uniforms.dayTexture.texture.wrapS = uniforms.dayTexture.texture.wrapT = THREE.Repeat;
-        //uniforms.nightTexture.texture.wrapS = uniforms.nightTexture.texture.wrapT = THREE.Repeat;
-        //var material = new THREE.ShaderMaterial({
-        //    uniforms: uniforms,
-        //    vertexShader: this.shaders.dayNight.vertex,
-        //    fragmentShader: this.shaders.dayNight.fragment,
-        //    //bumpMap: THREE.ImageUtils.loadTexture(PATH + 'earthbump1k.jpg'),
-        //    //bumpScale: 1,
-        //    //specularMap: THREE.ImageUtils.loadTexture(PATH + 'earthspec1k.jpg'),
-        //    //specular: new THREE.Color('grey')
-        //
+        //var material = new THREE.MeshPhongMaterial({
+        //    map: texture,
+        //    bumpMap: THREE.ImageUtils.loadTexture(PATH + 'earthbump1k.jpg'),
+        //    bumpScale: 1,
+        //    specularMap: THREE.ImageUtils.loadTexture(PATH + 'earthspec1k.jpg'),
+        //    specular: new THREE.Color('grey')
         //});
-        //texture.needsUpdate = true;
-        //obj.mesh.material.uniforms.texture = THREE.ImageUtils.loadTexture(PATH+"earthnight.jpg");
+        //console.log(texture);
+        var uniforms = {
+            sunDirection: {type: "v3", value: new THREE.Vector3(1, 0, 0)},
+            dayTexture: {type: "t", value: 0, texture: texture},
+            nightTexture: {type: "t", value: 1, texture: nightTexture}
+        };
+
+        uniforms.dayTexture.texture.wrapS = uniforms.dayTexture.texture.wrapT = THREE.Repeat;
+        uniforms.nightTexture.texture.wrapS = uniforms.nightTexture.texture.wrapT = THREE.Repeat;
+        var material = new THREE.ShaderMaterial({
+            uniforms: uniforms,
+            vertexShader: this.shaders.dayNight.vertex,
+            fragmentShader: this.shaders.dayNight.fragment
+        });
         material.shininess = 20;
-        material.map.minFilter = THREE.LinearFilter;
-        material.bumpMap.minFilter = THREE.LinearFilter;
-        material.specularMap.minFilter = THREE.LinearFilter;
+        //material.map.minFilter = THREE.LinearFilter;
+        //material.bumpMap.minFilter = THREE.LinearFilter;
+        //material.specularMap.minFilter = THREE.LinearFilter;
         this.earthMesh = new THREE.Mesh(geometry, material)
 
         this.earthMesh.rotation.y = 0;
