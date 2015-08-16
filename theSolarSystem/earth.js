@@ -1,5 +1,6 @@
 var Atmospheres = require('../lib/threex.atmospherematerial');
 var ShaderLoader = require('../lib/shaderLoader');
+var Physics = require('../lib/physics');
 const PATH = "./images/"
 const SHADERS = "./theSolarSystem/earthShaders/"
 //@math var Degree = require('../lib/degreeInRadian');
@@ -11,13 +12,24 @@ var Earth = {
     nbpoly: 32,
     atmosphereRadius: undefined,
     atmosphereSize: undefined,
-    axialTilt: 23.4,
+    axialTilt: 0.40840704497,
     //@math return (Degree.convert(360) / this.timeToFullSelfRotation);
     rotationPerSecond: 0.000007393570389010043,
     orbitRadius: 35643,
+    properties: {
+        //kg (5.98 * 10e24)
+        mass: 5980000000000000000000000,
+        //meters (6.279 * 10e6)
+        radius: 6378000,
+        //seconds
+        rotationTime: 84817.4724,
+        //km/h
+        rotationSpeed: 1180,
+        //degree
+        axialTilt:23.4
+    },
     shaders: [],
     animations: [],
-
     make: function (options, callback) {
         this.setup(options);
         var self = this;
