@@ -149,7 +149,7 @@ var Sun = {
         }
 
         if (!this.isRealistic) {
-            this.diameter /= 10;
+            this.diameter /= 3;
             this.rotationPerSecond *= 60000;
             this.lightDistance /= 10;
             this.lightIntensity /= 2;
