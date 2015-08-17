@@ -15,14 +15,15 @@ void main( void ) {
     float cosineAngleSunToNormal = dot(normalize(vNormal), sunDirection);
 
     // sharpen the edge beween the transition
-    cosineAngleSunToNormal = clamp( cosineAngleSunToNormal * 10.0, -1.0, 1.0);
+    cosineAngleSunToNormal = clamp( cosineAngleSunToNormal * 10.0, -0.7, 1.0);
 
     // convert to 0 to 1 for mixing
     float mixAmount = cosineAngleSunToNormal * 0.5 + 0.5;
 
     // Select day or night texture based on mix.
     vec3 color = mix( nightColor, dayColor, mixAmount );
+    //mix( nightColor, dayColor, mixAmount );
 
-    gl_FragColor = vec4( color, 1.0 );
+    gl_FragColor = vec4(color ,1.0);
     //gl_FragColor = vec4( mixAmount, mixAmount, mixAmount, 1.0 );
 }

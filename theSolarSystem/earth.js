@@ -4,6 +4,7 @@ var Physics = require('../lib/physics');
 const PATH = "./images/"
 const SHADERS = "./theSolarSystem/earthShaders/"
 //@math var Degree = require('../lib/degreeInRadian');
+//rim lighting
 var Earth = {
     //@math 60 * 60 * 23.5603 (23h56 03')
     timeToFullSelfRotation: 84817.4724,
@@ -38,7 +39,7 @@ var Earth = {
             self.manageRealism(self.isRealistic);
             self.init(self.scene);
             self.createMesh();
-            //self.createAtmosphere();
+            self.createAtmosphere();
             self.createClouds();
             callback(self.animations);
         });
@@ -74,12 +75,12 @@ var Earth = {
         //console.log(texture);
         var uniforms = {
             sunDirection: {type: "v3", value: new THREE.Vector3(1, 0, 0)},
-            dayTexture: {type: "t", value: 0, texture: texture},
-            nightTexture: {type: "t", value: 1, texture: nightTexture}
+            dayTexture: {type: "t", value: texture},
+            nightTexture: {type: "t", value: nightTexture}
         };
 
-        uniforms.dayTexture.texture.wrapS = uniforms.dayTexture.texture.wrapT = THREE.Repeat;
-        uniforms.nightTexture.texture.wrapS = uniforms.nightTexture.texture.wrapT = THREE.Repeat;
+        uniforms.dayTexture.value.wrapS = uniforms.dayTexture.value.wrapT = THREE.Repeat;
+        uniforms.nightTexture.value.wrapS = uniforms.nightTexture.value.wrapT = THREE.Repeat;
         var material = new THREE.ShaderMaterial({
             uniforms: uniforms,
             vertexShader: this.shaders.dayNight.vertex,
