@@ -27,7 +27,7 @@ var Earth = {
         //km/h
         rotationSpeed: 1180,
         //degree
-        axialTilt:23.4
+        axialTilt: 23.4
     },
     shaders: [],
     animations: [],
@@ -47,13 +47,14 @@ var Earth = {
     setup: function (options) {
         this.scene = options.scene;
         this.isRealistic = options.isRealistic;
+        this.sun = options.sun;
     },
     init: function (scene) {
-        this.containerEarth = new THREE.Object3D();
-        this.containerEarth.rotateZ(this.axialTilt * Math.PI / 180);
+        this.container = new THREE.Object3D();
+        this.container.rotateZ(this.axialTilt * Math.PI / 180);
         //Sun diameter * 109 = radius of earth's orbit (149,597,870 km) (35643)
-        this.containerEarth.position.x = this.orbitRadius;
-        scene.add(this.containerEarth);
+        this.container.position.x = this.orbitRadius;
+        scene.add(this.container);
         this.atmosphereRadius = this.diameter;
     },
     load: function (callback) {
@@ -73,14 +74,14 @@ var Earth = {
         //    specular: new THREE.Color('grey')
         //});
         //console.log(texture);
+        var vector = new THREE.Vector3(this.container.position.x, this.container.position.y, this.container.position.z);
         var uniforms = {
-            sunDirection: {type: "v3", value: new THREE.Vector3(1, 0, 0)},
+            sunDirection: {type: "v3", value: vector.normalize()},
             dayTexture: {type: "t", value: texture},
             nightTexture: {type: "t", value: nightTexture}
         };
-
-        uniforms.dayTexture.value.wrapS = uniforms.dayTexture.value.wrapT = THREE.Repeat;
-        uniforms.nightTexture.value.wrapS = uniforms.nightTexture.value.wrapT = THREE.Repeat;
+        uniforms.dayTexture.value.wrapS = uniforms.dayTexture.value.wrapT = THREE.RepeatWrapping;
+        uniforms.nightTexture.value.wrapS = uniforms.nightTexture.value.wrapT = THREE.RepeatWrapping;
         var material = new THREE.ShaderMaterial({
             uniforms: uniforms,
             vertexShader: this.shaders.dayNight.vertex,
@@ -95,7 +96,7 @@ var Earth = {
         this.earthMesh.rotation.y = 0;
         this.earthMesh.receiveShadow = true;
         this.earthMesh.castShadow = true;
-        this.containerEarth.add(this.earthMesh);
+        this.container.add(this.earthMesh);
         this.registerAnimation(function (delta, now) {
             Earth.earthMesh.rotation.y += Earth.rotationPerSecond / 60;
         })
@@ -158,7 +159,7 @@ var Earth = {
         this.earthCloud.receiveShadow = true;
         this.earthCloud.castShadow = true;
         this.earthCloud.scale.multiplyScalar(1.01);
-        this.containerEarth.add(this.earthCloud);
+        this.container.add(this.earthCloud);
         this.registerAnimation(function (delta, now) {
             Earth.earthCloud.rotation.y += (Earth.rotationPerSecond * 1.2) / 60;
         });
@@ -171,7 +172,7 @@ var Earth = {
         material.uniforms.power.value = 6.5
         this.atmosphere1 = new THREE.Mesh(geometry, material);
         this.atmosphere1.scale.multiplyScalar(1.04);
-        this.containerEarth.add(this.atmosphere1);
+        this.container.add(this.atmosphere1);
     },
     manageRealism: function (isRealistic) {
         if (typeof isRealistic != "undefined") {

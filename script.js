@@ -26,6 +26,9 @@ var WIDTH;
 //Global
 var onRenderContainer = [];
 
+//App
+var sun;
+
 function appendScene() {
     container.appendChild(renderer.domElement);
 }
@@ -111,14 +114,14 @@ function addSolarSystem() {
     addPlanets();
 }
 function addSun() {
-    var sun = Sun.make(scene, isRealistic);
+    sun = Sun.make(scene, isRealistic);
     var sunAnimations = sun.getAnimations();
     sunAnimations.forEach(function (animation) {
         onRenderContainer.push(animation);
     });
 }
 function addPlanets() {
-    Earth.make({scene: scene, isRealistic: isRealistic}, function (animations) {
+    Earth.make({scene: scene, isRealistic: isRealistic, sun: sun}, function (animations) {
         animations.forEach(function (animation) {
             onRenderContainer.push(animation);
         });

@@ -25,10 +25,10 @@ var Sun = {
         return this.animations;
     },
     init: function (scene) {
-        this.containerSun = new THREE.Object3D();
-        scene.add(this.containerSun);
+        this.container = new THREE.Object3D();
+        scene.add(this.container);
         this.registerAnimation(function (delta, now) {
-            Sun.containerSun.rotation.y += Sun.rotationPerSecond / 60;
+            Sun.container.rotation.y += Sun.rotationPerSecond / 60;
         });
     },
     createMesh: function () {
@@ -46,7 +46,7 @@ var Sun = {
         this.sunMesh.castShadow = true;
         this.sunMesh.scale.set(this.diameter, this.diameter, this.diameter);
         this.sunMesh.depthWrite = false;
-        this.containerSun.add(this.sunMesh);
+        this.container.add(this.sunMesh);
     },
     addLensFlare: function () {
         if (this.isRealistic) {
@@ -69,7 +69,7 @@ var Sun = {
         //this.lensflare.add(lensflaretexture3, 100, -0.5, THREE.AdditiveBlending);
         //this.lensflare.add(lensflaretexture3, 80, -0.8, THREE.AdditiveBlending);
 
-        this.containerSun.add(this.lensflare);
+        this.container.add(this.lensflare);
 
         this.registerAnimation(function (delta, camera) {
             Sun.lensflare.customUpdateCallback = function (obj) {

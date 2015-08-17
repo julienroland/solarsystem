@@ -14,7 +14,7 @@ void main( void ) {
     // compute cosine sun to normal so -1 is away from sun and +1 is toward sun.
     float cosineAngleSunToNormal = dot(normalize(vNormal), sunDirection);
 
-    // sharpen the edge beween the transition
+    // sharpen the edge between the transition
     cosineAngleSunToNormal = clamp( cosineAngleSunToNormal * 10.0, -0.7, 1.0);
 
     // convert to 0 to 1 for mixing
@@ -22,7 +22,6 @@ void main( void ) {
 
     // Select day or night texture based on mix.
     vec3 color = mix( nightColor, dayColor, mixAmount );
-    //mix( nightColor, dayColor, mixAmount );
 
     gl_FragColor = vec4(color ,1.0);
     //gl_FragColor = vec4( mixAmount, mixAmount, mixAmount, 1.0 );
