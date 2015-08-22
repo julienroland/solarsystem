@@ -36,6 +36,7 @@ var Earth = {
         var self = this;
         this.load(function (shaders) {
             self.shaders = shaders;
+            console.log(self.shaders);
             self.manageRealism(self.isRealistic);
             self.init(self.scene);
             self.createMesh();
@@ -87,7 +88,7 @@ var Earth = {
             vertexShader: this.shaders.dayNight.vertex,
             fragmentShader: this.shaders.dayNight.fragment
         });
-        material.shininess = 20;
+        //material.shininess = 20;
         //material.map.minFilter = THREE.LinearFilter;
         //material.bumpMap.minFilter = THREE.LinearFilter;
         //material.specularMap.minFilter = THREE.LinearFilter;

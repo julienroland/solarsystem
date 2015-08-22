@@ -106,8 +106,8 @@ function gui() {
     };
     gui.add(params, 'test');
 }
-function addSkybox() {
-    Skybox.make(scene, isRealistic);
+function addSkybox(callback) {
+    Skybox.make({scene: scene, isRealistic: isRealistic}, callback);
 }
 function addSolarSystem() {
     addSun();
@@ -129,12 +129,13 @@ function addPlanets() {
 }
 function init() {
     configureScene();
-    addSkybox();
-    addSolarSystem();
-    appendScene();
-    if (isDev()) {
-        gui();
-    }
-    animate();
+    addSkybox(function () {
+        addSolarSystem();
+        appendScene();
+        if (isDev()) {
+            gui();
+        }
+        animate();
+    });
 }
 init();
