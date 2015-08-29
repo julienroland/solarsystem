@@ -10,7 +10,7 @@ var Earth = {
     timeToFullSelfRotation: 84817.4724,
     isRealistic: false,
     diameter: 3,
-    nbpoly: 32,
+    nbpoly: 50,
     atmosphereRadius: undefined,
     atmosphereSize: undefined,
     axialTilt: 0.40840704497,
@@ -36,7 +36,6 @@ var Earth = {
         var self = this;
         this.load(function (shaders) {
             self.shaders = shaders;
-            console.log(self.shaders);
             self.manageRealism(self.isRealistic);
             self.init(self.scene);
             self.createMesh();
@@ -67,6 +66,7 @@ var Earth = {
         var geometry = new THREE.SphereGeometry(this.diameter, this.nbpoly, this.nbpoly)
         var texture = THREE.ImageUtils.loadTexture(PATH + 'earthdiffuse.jpg');
         var nightTexture = THREE.ImageUtils.loadTexture(PATH + "earthnight.jpg");
+        var normalMap = THREE.ImageUtils.loadTexture(PATH + 'earthnormal.png');
         //var material = new THREE.MeshPhongMaterial({
         //    map: texture,
         //    bumpMap: THREE.ImageUtils.loadTexture(PATH + 'earthbump1k.jpg'),
@@ -75,11 +75,12 @@ var Earth = {
         //    specular: new THREE.Color('grey')
         //});
         //console.log(texture);
-        var vector = new THREE.Vector3(this.container.position.x, this.container.position.y, this.container.position.z);
         var uniforms = {
-            sunDirection: {type: "v3", value: vector.normalize()},
+            sunDirection: {type: "v3", value: this.sun.container.position},
             dayTexture: {type: "t", value: texture},
-            nightTexture: {type: "t", value: nightTexture}
+            nightTexture: {type: "t", value: nightTexture},
+            normalMap: {type: "t", value: normalMap},
+            uvScale: {type: 'v2', value: new THREE.Vector2(1.0, 1.0)}
         };
         uniforms.dayTexture.value.wrapS = uniforms.dayTexture.value.wrapT = THREE.RepeatWrapping;
         uniforms.nightTexture.value.wrapS = uniforms.nightTexture.value.wrapT = THREE.RepeatWrapping;
@@ -88,12 +89,13 @@ var Earth = {
             vertexShader: this.shaders.dayNight.vertex,
             fragmentShader: this.shaders.dayNight.fragment
         });
-        //material.shininess = 20;
+        material.shininess = 20;
         //material.map.minFilter = THREE.LinearFilter;
         //material.bumpMap.minFilter = THREE.LinearFilter;
         //material.specularMap.minFilter = THREE.LinearFilter;
         this.earthMesh = new THREE.Mesh(geometry, material)
 
+        this.earthMesh.geometry.computeTangents();
         this.earthMesh.rotation.y = 0;
         this.earthMesh.receiveShadow = true;
         this.earthMesh.castShadow = true;

@@ -1,11 +1,27 @@
-varying vec2 vUv;
-varying vec3 vNormal;
+attribute vec4 tangent;
 
+uniform vec2 uvScale;
+uniform vec3 sunDirection;
+varying vec2 vUv;
+varying mat3 tbn;
+varying vec3 vLightVector;
+varying vec3 vNormal;
 void main()
 {
-    vUv = uv;
-    vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-    vNormal = normalMatrix * normal;
-    gl_Position = projectionMatrix * mvPosition;
+    vUv = uvScale * uv;
+
+    /** Create tangent-binormal-normal matrix used to transform
+    coordinates from object space to tangent space */
+    vec3 vNormal = normalize(normalMatrix * normal);
+    vec3 vTangent = normalize( normalMatrix * tangent.xyz );
+    vec3 vBinormal = normalize(cross( vNormal, vTangent ) * tangent.w);
+    tbn = mat3(vTangent, vBinormal, vNormal);
+
+    /** Calculate the vertex-to-light vector */
+    vec4 lightVector = viewMatrix * vec4(sunDirection, 1.0);
+    vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
+    vLightVector = normalize(lightVector.xyz - modelViewPosition.xyz);
+
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }
 

@@ -4,7 +4,7 @@ const PATH = "./images/"
 var Sun = {
     timeToFullSelfRotation: 849817.4724,
     isRealistic: false,
-    lightDistance: 10, //1000000000
+    lightDistance: 1000000000,
     lightIntensity: 2,
     diameter: 3270,
     axialTilt: 7.25,

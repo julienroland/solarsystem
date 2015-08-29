@@ -45,8 +45,9 @@ function addCamera() {
         aspectRatio,
         nearPlane,
         farPlane);
-    camera.position.z = -400;
-    camera.lookAt(new THREE.Vector3(0, 200, 0));
+    camera.position.z = 150;
+    camera.position.x = 506;
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
 }
 function addControls() {
     controls = new THREE.TrackballControls(camera);
@@ -59,7 +60,7 @@ function addControls() {
     controls.noPan = false;
 
     controls.staticMoving = true;
-    controls.dynamicDampingFactor = 0.3;
+    controls.dynamicDampingFactor = 0.5;
 
     controls.keys = [65, 83, 68];
     controls.addEventListener('change', function () {
@@ -72,7 +73,7 @@ function configureScene() {
     HEIGHT = window.innerHeight;
     WIDTH = window.innerWidth;
     aspectRatio = WIDTH / HEIGHT;
-    fieldOfView = 60;
+    fieldOfView = 45;
     nearPlane = .1;
     farPlane = 1000000000;
     renderer = new THREE.WebGLRenderer({alpha: true, antialias: true});
