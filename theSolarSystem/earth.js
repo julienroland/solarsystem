@@ -67,20 +67,14 @@ var Earth = {
         var nightTexture = THREE.ImageUtils.loadTexture(PATH + "earthnight.jpg");
         var normalMap = THREE.ImageUtils.loadTexture(PATH + 'earthnormal.png');
         var displacementMap = THREE.ImageUtils.loadTexture(PATH + 'earthdisplacement.png');
-        //var material = new THREE.MeshPhongMaterial({
-        //    map: texture,
-        //    bumpMap: THREE.ImageUtils.loadTexture(PATH + 'earthbump1k.jpg'),
-        //    bumpScale: 1,
-        //    specularMap: THREE.ImageUtils.loadTexture(PATH + 'earthspec1k.jpg'),
-        //    specular: new THREE.Color('grey')
-        //});
-        //console.log(texture);
+        var specularMap = THREE.ImageUtils.loadTexture(PATH + 'earthspecular.jpg');
         var uniforms = {
             sunDirection: {type: "v3", value: this.sun.container.position},
             sunLightIntensity: {type: "f", value: this.sun.lightIntensity},
             dayTexture: {type: "t", value: texture},
             nightTexture: {type: "t", value: nightTexture},
             normalMap: {type: "t", value: normalMap},
+            specularMap: {type: "t", value: specularMap},
             displacementMap: {type: "t", value: displacementMap},
             displacementLevel: {type: "f", value: 1.3}
         };
@@ -92,9 +86,17 @@ var Earth = {
         uniforms.nightTexture.value.minFilter = THREE.LinearFilter;
         uniforms.nightTexture.value.anisotropy = 2;
 
+        uniforms.displacementMap.value.wrapS = uniforms.displacementMap.value.wrapT = THREE.RepeatWrapping;
+        uniforms.displacementMap.value.minFilter = THREE.LinearFilter;
+        uniforms.displacementMap.value.anisotropy = 2;
+
         uniforms.normalMap.value.wrapS = uniforms.normalMap.value.wrapT = THREE.RepeatWrapping;
         uniforms.normalMap.value.minFilter = THREE.LinearFilter;
         uniforms.normalMap.value.anisotropy = 2;
+
+        uniforms.specularMap.value.wrapS = uniforms.specularMap.value.wrapT = THREE.RepeatWrapping;
+        uniforms.specularMap.value.minFilter = THREE.LinearFilter;
+        uniforms.specularMap.value.anisotropy = 2;
         var material = new THREE.ShaderMaterial({
             uniforms: uniforms,
             vertexShader: this.shaders.dayNight.vertex,

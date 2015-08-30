@@ -1,6 +1,7 @@
 uniform sampler2D dayTexture;
 uniform sampler2D nightTexture;
 uniform sampler2D normalMap;
+uniform sampler2D specularMap;
 
 uniform float sunLightIntensity;
 uniform vec3 sunDirection;
@@ -21,19 +22,26 @@ void main( void ) {
     float intensity = max(0.07, dot(normal, vLightVector * sunLightIntensity));
     vec4 lighting = vec4(intensity, intensity, intensity, 1.0);
 
-    vec4 dayTexture = texture2D(dayTexture, vUv) * lighting;
+    //Specular
+    vec3 specularMap = texture2D(specularMap, vUv).xyz;
+    vec3 specularColor  = vec3(0,0,0);
+    float c = 0.35;
+    float p = 3.0;
+    vec4 specular = vec4(specularMap.xyz * pow(c  * max(dot(normalize(vNormal), vec3(0,0,0)), 0.5), p),1.0);
+
+    vec4 dayTexture = texture2D(dayTexture, vUv) * lighting + specular;
     vec4 nightTexture = texture2D(nightTexture, vUv) * lighting;
 
     // compute cosine sun to normal so -1 is away from sun and +1 is toward sun.
     float cosineAngleSunToNormal = dot(normalize(vNormal), vLightVector);
 
     // sharpen the edge between the transition
-    cosineAngleSunToNormal = clamp(cosineAngleSunToNormal * 10.0, -0.7, 1.0);
+    float edgeCosineAngleSunToNormal = clamp(cosineAngleSunToNormal * 3.0, -0.7, 1.0);
 
     // convert to 0 to 1 for mixing
-    float mixAmount = cosineAngleSunToNormal * 0.5 + 0.5;
+    float mixAmount = edgeCosineAngleSunToNormal * 0.5 + 0.5;
 
     // Select day or night texture based on mix.
-    vec3 color = mix( nightTexture.rgb, dayTexture.rgb, 1.0 );
+    vec3 color = mix(nightTexture.xyz, dayTexture.xyz, 1.0);
     gl_FragColor = vec4(color, 1.0);
 }
