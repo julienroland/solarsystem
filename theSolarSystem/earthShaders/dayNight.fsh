@@ -2,6 +2,7 @@ uniform sampler2D dayTexture;
 uniform sampler2D nightTexture;
 uniform sampler2D normalMap;
 
+uniform float sunLightIntensity;
 uniform vec3 sunDirection;
 
 varying vec2 vUv;
@@ -17,7 +18,7 @@ void main( void ) {
     vec3 normal = normalize(tbn * normalCoordinate.rgb);
 
     /** Lighting intensity is calculated as dot of normal vector and the vertex-to-light vector */
-    float intensity = max(0.2, dot(normal, vLightVector));
+    float intensity = max(0.07, dot(normal, vLightVector * sunLightIntensity));
     vec4 lighting = vec4(intensity, intensity, intensity, 1.0);
 
     vec4 dayTexture = texture2D(dayTexture, vUv) * lighting;

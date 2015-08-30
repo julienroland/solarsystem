@@ -58,7 +58,6 @@ var Earth = {
         this.atmosphereRadius = this.diameter;
     },
     load: function (callback) {
-        //callback();
         ShaderLoader.load([SHADERS + 'dayNight'], callback);
     },
     createMesh: function () {
@@ -67,6 +66,7 @@ var Earth = {
         var texture = THREE.ImageUtils.loadTexture(PATH + 'earthdiffuse.jpg');
         var nightTexture = THREE.ImageUtils.loadTexture(PATH + "earthnight.jpg");
         var normalMap = THREE.ImageUtils.loadTexture(PATH + 'earthnormal.png');
+        var displacementMap = THREE.ImageUtils.loadTexture(PATH + 'earthdisplacement.png');
         //var material = new THREE.MeshPhongMaterial({
         //    map: texture,
         //    bumpMap: THREE.ImageUtils.loadTexture(PATH + 'earthbump1k.jpg'),
@@ -77,9 +77,12 @@ var Earth = {
         //console.log(texture);
         var uniforms = {
             sunDirection: {type: "v3", value: this.sun.container.position},
+            sunLightIntensity: {type: "f", value: this.sun.lightIntensity},
             dayTexture: {type: "t", value: texture},
             nightTexture: {type: "t", value: nightTexture},
-            normalMap: {type: "t", value: normalMap}
+            normalMap: {type: "t", value: normalMap},
+            displacementMap: {type: "t", value: displacementMap},
+            displacementLevel: {type: "f", value: 1.3}
         };
         uniforms.dayTexture.value.wrapS = uniforms.dayTexture.value.wrapT = THREE.RepeatWrapping;
         uniforms.dayTexture.value.minFilter = THREE.LinearFilter;
@@ -97,7 +100,6 @@ var Earth = {
             vertexShader: this.shaders.dayNight.vertex,
             fragmentShader: this.shaders.dayNight.fragment
         });
-        material.shininess = 20;
         this.earthMesh = new THREE.Mesh(geometry, material)
 
         this.earthMesh.geometry.computeTangents();
