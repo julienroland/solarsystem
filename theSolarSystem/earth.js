@@ -40,7 +40,7 @@ var Earth = {
             self.init(self.scene);
             self.createMesh();
             self.createAtmosphere();
-            self.createClouds();
+            //self.createClouds();
             callback(self.animations);
         });
     },
@@ -79,20 +79,25 @@ var Earth = {
             sunDirection: {type: "v3", value: this.sun.container.position},
             dayTexture: {type: "t", value: texture},
             nightTexture: {type: "t", value: nightTexture},
-            normalMap: {type: "t", value: normalMap},
-            uvScale: {type: 'v2', value: new THREE.Vector2(1.0, 1.0)}
+            normalMap: {type: "t", value: normalMap}
         };
         uniforms.dayTexture.value.wrapS = uniforms.dayTexture.value.wrapT = THREE.RepeatWrapping;
+        uniforms.dayTexture.value.minFilter = THREE.LinearFilter;
+        uniforms.dayTexture.value.anisotropy = 2;
+
         uniforms.nightTexture.value.wrapS = uniforms.nightTexture.value.wrapT = THREE.RepeatWrapping;
+        uniforms.nightTexture.value.minFilter = THREE.LinearFilter;
+        uniforms.nightTexture.value.anisotropy = 2;
+
+        uniforms.normalMap.value.wrapS = uniforms.normalMap.value.wrapT = THREE.RepeatWrapping;
+        uniforms.normalMap.value.minFilter = THREE.LinearFilter;
+        uniforms.normalMap.value.anisotropy = 2;
         var material = new THREE.ShaderMaterial({
             uniforms: uniforms,
             vertexShader: this.shaders.dayNight.vertex,
             fragmentShader: this.shaders.dayNight.fragment
         });
         material.shininess = 20;
-        //material.map.minFilter = THREE.LinearFilter;
-        //material.bumpMap.minFilter = THREE.LinearFilter;
-        //material.specularMap.minFilter = THREE.LinearFilter;
         this.earthMesh = new THREE.Mesh(geometry, material)
 
         this.earthMesh.geometry.computeTangents();
