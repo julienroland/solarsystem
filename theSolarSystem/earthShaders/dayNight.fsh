@@ -29,14 +29,14 @@ void main( void ) {
     float p = 3.0;
     vec4 specular = vec4(specularMap.xyz * pow(c  * max(dot(normalize(vNormal), vLightVector), 0.5), p),1.0);
 
-    vec4 dayTexture = texture2D(dayTexture, vUv) * lighting ; //+ specular
-    vec4 nightTexture = texture2D(nightTexture, vUv) * lighting;
+    vec4 dayTexture = texture2D(dayTexture, vUv) ; //* lighting + specular
+    vec4 nightTexture = texture2D(nightTexture, vUv) ; //* lighting
 
     // compute cosine sun to normal so -1 is away from sun and +1 is toward sun.
     float cosineAngleSunToNormal = dot(normalize(vNormal), vLightVector);
 
     // sharpen the edge between the transition
-    float edgeCosineAngleSunToNormal = clamp(cosineAngleSunToNormal * 10.0, -0.7, 1.0);
+    float edgeCosineAngleSunToNormal = clamp(cosineAngleSunToNormal * 3.0, -1.0, 1.0);
 
     // convert to 0 to 1 for mixing
     float mixAmount = edgeCosineAngleSunToNormal * 0.5 + 0.5;

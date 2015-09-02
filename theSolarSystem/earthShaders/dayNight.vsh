@@ -15,10 +15,11 @@ void main()
 
     /** Create tangent-binormal-normal matrix used to transform
     coordinates from object space to tangent space */
-    vNormal = normalize(vNormal * normal);
-    vec3 vTangent = normalize(vNormal * tangent.xyz);
-    vec3 vBinormal = normalize(cross(vNormal, vTangent) * tangent.w);
-    tbn = mat3(vTangent, vBinormal, vNormal);
+    vNormal = normalMatrix * normal;
+    vec3 bumpNormal = normalize(vNormal * normal);
+    vec3 vTangent = normalize(bumpNormal * tangent.xyz);
+    vec3 vBinormal = normalize(cross(bumpNormal, vTangent) * tangent.w);
+    tbn = mat3(vTangent, vBinormal, bumpNormal);
 
     /** Calculate the vertex-to-light vector */
     vec4 lightVector = viewMatrix * vec4(sunDirection, 1.0);
