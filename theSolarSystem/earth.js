@@ -39,8 +39,8 @@ var Earth = {
             self.manageRealism(self.isRealistic);
             self.init(self.scene);
             self.createMesh();
-            //self.createAtmosphere();
-            //self.createClouds();
+            self.createAtmosphere();
+            self.createClouds();
             callback(self.animations);
         });
     },
@@ -58,7 +58,7 @@ var Earth = {
         this.atmosphereRadius = this.diameter;
     },
     load: function (callback) {
-        ShaderLoader.load([SHADERS + 'dayNight'], callback);
+        ShaderLoader.load([SHADERS + 'earth'], callback);
     },
     createMesh: function () {
         //Earth is more or less 109 times smaller than sun
@@ -76,7 +76,7 @@ var Earth = {
             normalMap: {type: "t", value: normalMap},
             specularMap: {type: "t", value: specularMap},
             displacementMap: {type: "t", value: displacementMap},
-            displacementLevel: {type: "f", value: 1.3}
+            displacementLevel: {type: "f", value: 1.5}
         };
         uniforms.dayTexture.value.wrapS = uniforms.dayTexture.value.wrapT = THREE.RepeatWrapping;
         uniforms.dayTexture.value.minFilter = THREE.LinearFilter;
@@ -99,8 +99,8 @@ var Earth = {
         uniforms.specularMap.value.anisotropy = 2;
         var material = new THREE.ShaderMaterial({
             uniforms: uniforms,
-            vertexShader: this.shaders.dayNight.vertex,
-            fragmentShader: this.shaders.dayNight.fragment
+            vertexShader: this.shaders.earth.vertex,
+            fragmentShader: this.shaders.earth.fragment
         });
         this.earthMesh = new THREE.Mesh(geometry, material)
 
@@ -115,62 +115,16 @@ var Earth = {
     },
     createClouds: function () {
         var geometry = new THREE.SphereGeometry(this.diameter, this.nbpoly, this.nbpoly)
-        // create destination canvas
-        var canvasResult = document.createElement('canvas')
-        canvasResult.width = 1024
-        canvasResult.height = 512
-        var contextResult = canvasResult.getContext('2d')
-
-        // load earthcloudmap
-        var imageMap = new Image();
-        imageMap.addEventListener("load", function () {
-
-            // create dataMap ImageData for earthcloudmap
-            var canvasMap = document.createElement('canvas')
-            canvasMap.width = imageMap.width
-            canvasMap.height = imageMap.height
-            var contextMap = canvasMap.getContext('2d')
-            contextMap.drawImage(imageMap, 0, 0)
-            var dataMap = contextMap.getImageData(0, 0, canvasMap.width, canvasMap.height)
-
-            // load earthcloudmaptrans
-            var imageTrans = new Image();
-            imageTrans.addEventListener("load", function () {
-                // create dataTrans ImageData for earthcloudmaptrans
-                var canvasTrans = document.createElement('canvas')
-                canvasTrans.width = imageTrans.width
-                canvasTrans.height = imageTrans.height
-                var contextTrans = canvasTrans.getContext('2d')
-                contextTrans.drawImage(imageTrans, 0, 0)
-                var dataTrans = contextTrans.getImageData(0, 0, canvasTrans.width, canvasTrans.height)
-                // merge dataMap + dataTrans into dataResult
-                var dataResult = contextMap.createImageData(canvasMap.width, canvasMap.height)
-                for (var y = 0, offset = 0; y < imageMap.height; y++) {
-                    for (var x = 0; x < imageMap.width; x++, offset += 4) {
-                        dataResult.data[offset + 0] = dataMap.data[offset + 0]
-                        dataResult.data[offset + 1] = dataMap.data[offset + 1]
-                        dataResult.data[offset + 2] = dataMap.data[offset + 2]
-                        dataResult.data[offset + 3] = 255 - dataTrans.data[offset + 0]
-                    }
-                }
-                // update texture with result
-                contextResult.putImageData(dataResult, 0, 0)
-                material.map.needsUpdate = true;
-            })
-            imageTrans.src = PATH + 'earthcloudmaptrans.jpg';
-        }, false);
-        imageMap.src = PATH + 'earthcloudmap.jpg';
-
         var material = new THREE.MeshPhongMaterial({
-            map: new THREE.Texture(canvasResult),
+            map: new THREE.ImageUtils.loadTexture(PATH + 'earthclouds.png'),
             side: THREE.FrontSide,
             transparent: true,
-            opacity: 0.8
+            opacity: 0.5
         });
         this.earthCloud = new THREE.Mesh(geometry, material)
         this.earthCloud.receiveShadow = true;
         this.earthCloud.castShadow = true;
-        this.earthCloud.scale.multiplyScalar(1.01);
+        this.earthCloud.scale.multiplyScalar(1.03);
         this.container.add(this.earthCloud);
         this.registerAnimation(function (delta, now) {
             Earth.earthCloud.rotation.y += (Earth.rotationPerSecond * 1.2) / 60;
@@ -183,7 +137,7 @@ var Earth = {
         material.uniforms.coeficient.value = 1
         material.uniforms.power.value = 6.5
         this.atmosphere1 = new THREE.Mesh(geometry, material);
-        this.atmosphere1.scale.multiplyScalar(1.04);
+        this.atmosphere1.scale.multiplyScalar(1.05);
         this.container.add(this.atmosphere1);
     },
     manageRealism: function (isRealistic) {
