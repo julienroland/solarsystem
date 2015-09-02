@@ -33,7 +33,7 @@ void main( void ) {
     vec4 nightTexture = texture2D(nightTexture, vUv) ; //* lighting
 
     // compute cosine sun to normal so -1 is away from sun and +1 is toward sun.
-    float cosineAngleSunToNormal = dot(normalize(vNormal), sunDirection);
+    float cosineAngleSunToNormal = dot(normalize(vNormal), vec3(0,0,0));
 
     // sharpen the edge between the transition
     float edgeCosineAngleSunToNormal = clamp(cosineAngleSunToNormal * 10.0, -0.7, 1.0);
