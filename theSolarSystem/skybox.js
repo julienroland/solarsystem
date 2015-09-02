@@ -35,7 +35,7 @@ var Skybox = {
     createBox: function (scene) {
         var geometry = new THREE.SphereGeometry(this.size, 60, 40);
         var uniforms = {
-            texture: {type: 't', value: new THREE.ImageUtils.loadTexture(PATH + 'milkyway.jpg')}
+            texture: {type: 't', value: new THREE.ImageUtils.loadTexture(PATH + 'milkyway-2.jpg')}
         };
         uniforms.texture.minFilter = THREE.NearestFilter;
         var material = new THREE.ShaderMaterial({
