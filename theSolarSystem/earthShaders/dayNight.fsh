@@ -16,7 +16,7 @@ void main( void ) {
     vec3 normalCoordinate = texture2D(normalMap, vUv).xyz * 2.0 - 1.0;
 
     /** Transform the normal vector in the RGB channels to tangent space */
-    vec3 normal = normalize(tbn * normalCoordinate.rgb);
+    vec3 normal = normalize(tbn * normalCoordinate.xyz);
 
     /** Lighting intensity is calculated as dot of normal vector and the vertex-to-light vector */
     float intensity = max(0.07, dot(normal, vLightVector * sunLightIntensity));
@@ -27,13 +27,13 @@ void main( void ) {
     vec3 specularColor  = vec3(0,0,0);
     float c = 0.35;
     float p = 3.0;
-    vec4 specular = vec4(specularMap.xyz * pow(c  * max(dot(normalize(vNormal), vec3(0,0,0)), 0.5), p),1.0);
+    vec4 specular = vec4(specularMap.xyz * pow(c  * max(dot(normalize(vNormal), vLightVector), 0.5), p),1.0);
 
-    vec4 dayTexture = texture2D(dayTexture, vUv) ; //* lighting + specular
-    vec4 nightTexture = texture2D(nightTexture, vUv) ; //* lighting
+    vec4 dayTexture = texture2D(dayTexture, vUv) * lighting ; //+ specular
+    vec4 nightTexture = texture2D(nightTexture, vUv) * lighting;
 
     // compute cosine sun to normal so -1 is away from sun and +1 is toward sun.
-    float cosineAngleSunToNormal = dot(normalize(vNormal), vec3(0,0,0));
+    float cosineAngleSunToNormal = dot(normalize(vNormal), vLightVector);
 
     // sharpen the edge between the transition
     float edgeCosineAngleSunToNormal = clamp(cosineAngleSunToNormal * 10.0, -0.7, 1.0);

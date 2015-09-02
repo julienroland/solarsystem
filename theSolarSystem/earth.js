@@ -39,7 +39,7 @@ var Earth = {
             self.manageRealism(self.isRealistic);
             self.init(self.scene);
             self.createMesh();
-            self.createAtmosphere();
+            //self.createAtmosphere();
             //self.createClouds();
             callback(self.animations);
         });
@@ -69,7 +69,7 @@ var Earth = {
         var displacementMap = THREE.ImageUtils.loadTexture(PATH + 'earthdisplacement.png');
         var specularMap = THREE.ImageUtils.loadTexture(PATH + 'earthspecular.jpg');
         var uniforms = {
-            sunDirection: {type: "v3", value: this.sun.container.position},
+            sunDirection: {type: "v3", value: this.sun.container.position.normalize()},
             sunLightIntensity: {type: "f", value: this.sun.lightIntensity},
             dayTexture: {type: "t", value: texture},
             nightTexture: {type: "t", value: nightTexture},
