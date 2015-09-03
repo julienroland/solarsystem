@@ -1,7 +1,6 @@
 uniform sampler2D dayTexture;
 uniform sampler2D nightTexture;
 uniform sampler2D normalMap;
-uniform sampler2D specularMap;
 
 uniform float sunLightIntensity;
 uniform vec3 sunDirection;
@@ -23,13 +22,13 @@ void main( void ) {
     vec4 lighting = vec4(intensity, intensity, intensity, 1.0);
 
     vec4 dayTexture = texture2D(dayTexture, vUv) * lighting;
-    vec4 nightTexture = texture2D(nightTexture, vUv) * (lighting*15.0);
+    vec4 nightTexture = texture2D(nightTexture, vUv) * (lighting * 10.0);
 
     // compute cosine sun to normal so -1 is away from sun and +1 is toward sun.
     float cosineAngleSunToNormal = dot(normalize(vNormal), vLightVector);
 
     // sharpen the edge between the transition
-    float edgeCosineAngleSunToNormal = clamp(cosineAngleSunToNormal * 2.0, -1.0, 1.0);
+    float edgeCosineAngleSunToNormal = clamp(cosineAngleSunToNormal * 3.0, -1.0, 1.0);
 
     // convert to 0 to 1 for mixing
     float mixAmount = edgeCosineAngleSunToNormal * 0.5 + 0.5;

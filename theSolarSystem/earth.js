@@ -64,19 +64,17 @@ var Earth = {
         //Earth is more or less 109 times smaller than sun
         var geometry = new THREE.SphereGeometry(this.diameter, this.nbpoly, this.nbpoly)
         var texture = THREE.ImageUtils.loadTexture(PATH + 'earthdiffuse.jpg');
-        var nightTexture = THREE.ImageUtils.loadTexture(PATH + "earthnight.jpg");
+        var nightTexture = THREE.ImageUtils.loadTexture(PATH + "earthnight-2.jpg");
         var normalMap = THREE.ImageUtils.loadTexture(PATH + 'earthnormal.png');
         var displacementMap = THREE.ImageUtils.loadTexture(PATH + 'earthdisplacement.png');
-        var specularMap = THREE.ImageUtils.loadTexture(PATH + 'earthspecular.jpg');
         var uniforms = {
             sunDirection: {type: "v3", value: this.sun.container.position.normalize()},
             sunLightIntensity: {type: "f", value: this.sun.lightIntensity},
             dayTexture: {type: "t", value: texture},
             nightTexture: {type: "t", value: nightTexture},
             normalMap: {type: "t", value: normalMap},
-            specularMap: {type: "t", value: specularMap},
             displacementMap: {type: "t", value: displacementMap},
-            displacementLevel: {type: "f", value: 1.5}
+            displacementLevel: {type: "f", value: 1.1}
         };
         uniforms.dayTexture.value.wrapS = uniforms.dayTexture.value.wrapT = THREE.RepeatWrapping;
         uniforms.dayTexture.value.minFilter = THREE.LinearFilter;
@@ -93,10 +91,6 @@ var Earth = {
         uniforms.normalMap.value.wrapS = uniforms.normalMap.value.wrapT = THREE.RepeatWrapping;
         uniforms.normalMap.value.minFilter = THREE.LinearFilter;
         uniforms.normalMap.value.anisotropy = 2;
-
-        uniforms.specularMap.value.wrapS = uniforms.specularMap.value.wrapT = THREE.RepeatWrapping;
-        uniforms.specularMap.value.minFilter = THREE.LinearFilter;
-        uniforms.specularMap.value.anisotropy = 2;
         var material = new THREE.ShaderMaterial({
             uniforms: uniforms,
             vertexShader: this.shaders.earth.vertex,
@@ -119,8 +113,10 @@ var Earth = {
             map: new THREE.ImageUtils.loadTexture(PATH + 'earthclouds.png'),
             side: THREE.FrontSide,
             transparent: true,
-            opacity: 0.5
+            opacity: 0.6
         });
+        material.map.minFilter = THREE.LinearFilter;
+        material.map.anisotropy = 2;
         this.earthCloud = new THREE.Mesh(geometry, material)
         this.earthCloud.receiveShadow = true;
         this.earthCloud.castShadow = true;
