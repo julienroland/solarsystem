@@ -51,7 +51,7 @@ function addCamera() {
 }
 function addControls() {
     controls = new THREE.TrackballControls(camera);
-    controls.target.set(0, 0, 0);
+    controls.target.set(356, 0, 0);
     controls.rotateSpeed = 1.0;
     controls.zoomSpeed = 1.2;
     controls.panSpeed = 0.8;

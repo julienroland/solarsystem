@@ -128,10 +128,10 @@ var Earth = {
     },
     createAtmosphere: function () {
         var geometry = new THREE.SphereGeometry(this.diameter, this.nbpoly, this.nbpoly);
-        var material = Atmospheres.createAtmosphereMaterial()
-        material.uniforms.glowColor.value.set(0x00b3ff)
-        material.uniforms.coeficient.value = 1
-        material.uniforms.power.value = 6.5
+        var material = Atmospheres.createAtmosphereMaterial();
+        material.uniforms.glowColor.value.set(0x00b3ff);
+        material.uniforms.coeficient.value = 1;
+        material.uniforms.power.value = 6.5;
         this.atmosphere1 = new THREE.Mesh(geometry, material);
         this.atmosphere1.scale.multiplyScalar(1.05);
         this.container.add(this.atmosphere1);
