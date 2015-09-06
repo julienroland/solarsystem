@@ -66,14 +66,12 @@ var Earth = {
         var texture = THREE.ImageUtils.loadTexture(PATH + 'earthdiffuse.jpg');
         var nightTexture = THREE.ImageUtils.loadTexture(PATH + "earthnight-2.jpg");
         var normalMap = THREE.ImageUtils.loadTexture(PATH + 'earthnormal.png');
-        var displacementMap = THREE.ImageUtils.loadTexture(PATH + 'earthdisplacement.png');
         var uniforms = {
             sunDirection: {type: "v3", value: this.sun.container.position.normalize()},
             sunLightIntensity: {type: "f", value: this.sun.lightIntensity},
             dayTexture: {type: "t", value: texture},
             nightTexture: {type: "t", value: nightTexture},
             normalMap: {type: "t", value: normalMap},
-            displacementMap: {type: "t", value: displacementMap},
             displacementLevel: {type: "f", value: 1.1}
         };
         uniforms.dayTexture.value.wrapS = uniforms.dayTexture.value.wrapT = THREE.RepeatWrapping;
@@ -83,10 +81,6 @@ var Earth = {
         uniforms.nightTexture.value.wrapS = uniforms.nightTexture.value.wrapT = THREE.RepeatWrapping;
         uniforms.nightTexture.value.minFilter = THREE.LinearFilter;
         uniforms.nightTexture.value.anisotropy = 2;
-
-        uniforms.displacementMap.value.wrapS = uniforms.displacementMap.value.wrapT = THREE.RepeatWrapping;
-        uniforms.displacementMap.value.minFilter = THREE.LinearFilter;
-        uniforms.displacementMap.value.anisotropy = 2;
 
         uniforms.normalMap.value.wrapS = uniforms.normalMap.value.wrapT = THREE.RepeatWrapping;
         uniforms.normalMap.value.minFilter = THREE.LinearFilter;
