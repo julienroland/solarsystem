@@ -64,7 +64,7 @@ var Earth = {
         //Earth is more or less 109 times smaller than sun
         var geometry = new THREE.SphereGeometry(this.diameter, this.nbpoly, this.nbpoly)
         var texture = THREE.ImageUtils.loadTexture(PATH + 'earthdiffuse.jpg');
-        var nightTexture = THREE.ImageUtils.loadTexture(PATH + "earthnight-2.jpg");
+        var nightTexture = THREE.ImageUtils.loadTexture(PATH + "earthnight-3.png");
         var normalMap = THREE.ImageUtils.loadTexture(PATH + 'earthnormal.png');
         var uniforms = {
             sunDirection: {type: "v3", value: this.sun.container.position.normalize()},
@@ -114,7 +114,7 @@ var Earth = {
         this.earthCloud = new THREE.Mesh(geometry, material)
         this.earthCloud.receiveShadow = true;
         this.earthCloud.castShadow = true;
-        this.earthCloud.scale.multiplyScalar(1.03);
+        this.earthCloud.scale.multiplyScalar(1.002);
         this.container.add(this.earthCloud);
         this.registerAnimation(function (delta, now) {
             Earth.earthCloud.rotation.y += (Earth.rotationPerSecond * 1.2) / 60;
@@ -127,7 +127,7 @@ var Earth = {
         material.uniforms.coeficient.value = 1;
         material.uniforms.power.value = 6.5;
         this.atmosphere1 = new THREE.Mesh(geometry, material);
-        this.atmosphere1.scale.multiplyScalar(1.05);
+        this.atmosphere1.scale.multiplyScalar(1.02);
         this.container.add(this.atmosphere1);
     },
     manageRealism: function (isRealistic) {
