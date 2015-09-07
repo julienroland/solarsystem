@@ -10,14 +10,15 @@ void main()
 {
     vUv = uv;
 
-    /** Create tangent-binormal-normal matrix used to transform
-    coordinates from object space to tangent space */
+    //Get the TBN (UVN) using normal (n) and tangent
     vNormal = normalize(normalMatrix * normal);
     vec3 vTangent = normalize(vNormal * tangent.xyz);
-    vec3 vBinormal = normalize(cross(vNormal, vTangent) * tangent.w);
+    vec3 vBinormal = normalize(cross(vNormal, vTangent.xyz) * tangent.w);
+
+    //Create a 3 dimensions matrix (triangle) using UVN
     tbn = mat3(vTangent, vBinormal, vNormal);
 
-    /** Calculate the vertex-to-light vector */
+    //LightVector using sunDirection
     vec4 lightVector = viewMatrix * vec4(sunDirection, 1.0);
 
     vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);

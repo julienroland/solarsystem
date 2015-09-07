@@ -11,13 +11,13 @@ varying vec3 vNormal;
 varying vec3 vLightVector;
 
 void main( void ) {
-    /** Transform texture coordinate of normal map to a range (-1, 1) */
-    vec3 normalCoordinate = texture2D(normalMap, vUv).xyz * 2.0 - 1.0;
+    // Transform texture coordinate of normal map to a range (-1, 1)
+    vec3 normalCoordinate = 2.0 * texture2D(normalMap, vUv).xyz - 1.0;
 
-    /** Transform the normal vector in the RGB channels to tangent space */
+    //Matrix3 into texture uv as RGB
     vec3 normal = normalize(tbn * normalCoordinate.xyz);
 
-    /** Lighting intensity is calculated as dot of normal vector and the vertex-to-light vector */
+    // Lighting intensity is calculated as dot of normal vector and the vertex-to-light vector
     float intensity = max(0.07, dot(normal, vLightVector * sunLightIntensity));
     vec4 lighting = vec4(intensity, intensity, intensity, 1.0);
 
