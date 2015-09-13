@@ -1,5 +1,8 @@
 var Int = require('../lib/int');
-const PATH = "./images/"
+var ShaderLoader = require('../lib/shaderLoader');
+const PATH = "./images/";
+const SHADERS = "./theSolarSystem/sunShaders/";
+var start = Date.now();
 //@math var Degree = require('../lib/degreeInRadian');
 var Sun = {
     timeToFullSelfRotation: 849817.4724,
@@ -11,18 +14,23 @@ var Sun = {
     //rotationPerSecond: 1.4604583484464283,
     rotationPerSecond: 0.000000014604583484464283,
     animations: [],
-    make: function (scene, isRealistic) {
-        this.manageRealism(isRealistic);
-        this.init(scene);
-        this.createMesh();
-        //this.addLensFlare();
-        this.addLight(scene);
-        //this.addParticules(scene);
-
-        return this;
+    make: function (options, callback) {
+        this.setup(options);
+        var self = this;
+        this.load(function (shaders) {
+            self.shaders = shaders;
+            self.manageRealism(self.isRealistic);
+            self.init(self.scene);
+            self.createMesh();
+            //self.addLensFlare();
+            self.addLight(self.scene);
+            //self.addParticules(scene);
+            callback(self.animations);
+        });
     },
-    getAnimations: function () {
-        return this.animations;
+    setup: function (options) {
+        this.scene = options.scene;
+        this.isRealistic = options.isRealistic;
     },
     init: function (scene) {
         this.container = new THREE.Object3D();
@@ -33,11 +41,23 @@ var Sun = {
             Sun.container.rotation.y += Sun.rotationPerSecond / 60;
         });
     },
+    load: function (callback) {
+        ShaderLoader.load([SHADERS + 'sun'], callback);
+    },
     createMesh: function () {
         var geometry = new THREE.SphereGeometry(0.5, 40, 40);
         var texture = THREE.ImageUtils.loadTexture(PATH + 'sunmap.png');
-        var material = new THREE.MeshPhongMaterial({
-            map: texture
+        var uniforms = {
+            sunTexture: {type: "t", value: texture},
+            time: {type: "f", value: 0.0}
+        };
+        var material = new THREE.ShaderMaterial({
+            uniforms: uniforms,
+            vertexShader: this.shaders.sun.vertex,
+            fragmentShader: this.shaders.sun.fragment
+        });
+        this.registerAnimation(function (delta) {
+            Sun.sunMesh.material.uniforms['time'].value += .00025 * Date.now() - start;
         });
         this.sunMesh = new THREE.Mesh(geometry, material);
         this.sunMesh.receiveShadow = true;

@@ -27,7 +27,6 @@ var WIDTH;
 var onRenderContainer = [];
 
 //App
-var sun;
 
 function appendScene() {
     container.appendChild(renderer.domElement);
@@ -111,17 +110,20 @@ function addSkybox(callback) {
     Skybox.make({scene: scene, isRealistic: isRealistic}, callback);
 }
 function addSolarSystem() {
-    addSun();
-    //addPlanets();
-}
-function addSun() {
-    sun = Sun.make(scene, isRealistic);
-    var sunAnimations = sun.getAnimations();
-    sunAnimations.forEach(function (animation) {
-        onRenderContainer.push(animation);
+    addSun(function (sun) {
+        console.log('Sun loaded');
+        //addPlanets(sun);
     });
 }
-function addPlanets() {
+function addSun(callback) {
+    Sun.make({scene: scene, isRealistic: isRealistic}, function (animations) {
+        animations.forEach(function (animation) {
+            onRenderContainer.push(animation);
+        });
+        callback(Sun);
+    });
+}
+function addPlanets(sun) {
     Earth.make({scene: scene, isRealistic: isRealistic, sun: sun}, function (animations) {
         animations.forEach(function (animation) {
             onRenderContainer.push(animation);

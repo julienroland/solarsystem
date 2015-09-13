@@ -1,8 +1,8 @@
 var Atmospheres = require('../lib/threex.atmospherematerial');
 var ShaderLoader = require('../lib/shaderLoader');
 var Physics = require('../lib/physics');
-const PATH = "./images/"
-const SHADERS = "./theSolarSystem/earthShaders/"
+const PATH = "./images/";
+const SHADERS = "./theSolarSystem/earthShaders/";
 //@math var Degree = require('../lib/degreeInRadian');
 //rim lighting
 var Earth = {
@@ -71,8 +71,7 @@ var Earth = {
             sunLightIntensity: {type: "f", value: this.sun.lightIntensity},
             dayTexture: {type: "t", value: texture},
             nightTexture: {type: "t", value: nightTexture},
-            normalMap: {type: "t", value: normalMap},
-            displacementLevel: {type: "f", value: 1.1}
+            normalMap: {type: "t", value: normalMap}
         };
         uniforms.dayTexture.value.wrapS = uniforms.dayTexture.value.wrapT = THREE.RepeatWrapping;
         uniforms.dayTexture.value.minFilter = THREE.LinearFilter;
