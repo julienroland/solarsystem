@@ -14,8 +14,8 @@ var Sun = {
     make: function (scene, isRealistic) {
         this.manageRealism(isRealistic);
         this.init(scene);
-        //this.createMesh();
-        this.addLensFlare();
+        this.createMesh();
+        //this.addLensFlare();
         this.addLight(scene);
         //this.addParticules(scene);
 
@@ -26,6 +26,8 @@ var Sun = {
     },
     init: function (scene) {
         this.container = new THREE.Object3D();
+        this.container.rotateZ(this.axialTilt * Math.PI / 180);
+        this.container.position = THREE.Vector3(0, 0, 0);
         scene.add(this.container);
         this.registerAnimation(function (delta, now) {
             Sun.container.rotation.y += Sun.rotationPerSecond / 60;
@@ -33,15 +35,11 @@ var Sun = {
     },
     createMesh: function () {
         var geometry = new THREE.SphereGeometry(0.5, 40, 40);
-        var texture = THREE.ImageUtils.loadTexture(PATH + 'sunmap.jpg');
+        var texture = THREE.ImageUtils.loadTexture(PATH + 'sunmap.png');
         var material = new THREE.MeshPhongMaterial({
-            map: texture,
-            bumpMap: THREE.ImageUtils.loadTexture(PATH + 'sun_surface.png'),
-            bumpScale: 1
+            map: texture
         });
         this.sunMesh = new THREE.Mesh(geometry, material);
-        this.sunMesh.rotateZ(this.axialTilt * Math.PI / 180);
-        this.sunMesh.position.z = 0;
         this.sunMesh.receiveShadow = true;
         this.sunMesh.castShadow = true;
         this.sunMesh.scale.set(this.diameter, this.diameter, this.diameter);
@@ -149,7 +147,7 @@ var Sun = {
         }
 
         if (!this.isRealistic) {
-            this.diameter /= 3;
+            this.diameter /= 10;
             this.rotationPerSecond *= 60000;
             this.lightDistance /= 10;
         }

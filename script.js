@@ -86,7 +86,7 @@ function configureScene() {
     if (isDev()) {
         addControls();
     }
-    //addLights();
+    addLights();
 }
 
 function animate() {
@@ -112,7 +112,7 @@ function addSkybox(callback) {
 }
 function addSolarSystem() {
     addSun();
-    addPlanets();
+    //addPlanets();
 }
 function addSun() {
     sun = Sun.make(scene, isRealistic);
