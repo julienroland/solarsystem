@@ -85,7 +85,7 @@ function configureScene() {
     if (isDev()) {
         addControls();
     }
-    addLights();
+    //addLights();
 }
 
 function animate() {
@@ -112,7 +112,7 @@ function addSkybox(callback) {
 function addSolarSystem() {
     addSun(function (sun) {
         console.log('Sun loaded');
-        //addPlanets(sun);
+        addPlanets(sun);
     });
 }
 function addSun(callback) {

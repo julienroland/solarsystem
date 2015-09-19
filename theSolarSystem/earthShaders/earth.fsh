@@ -1,3 +1,11 @@
+float diffuse(vec3 n,vec3 l,float p) {
+    return pow(dot(n,l) * 0.4 + 0.6,p);
+}
+float specular(vec3 n,vec3 l,vec3 e,float s) {
+    float nrm = (s + 8.0) / (3.1415 * 8.0);
+    return pow(max(dot(reflect(e,n),l),0.0),s) * nrm;
+}
+
 uniform sampler2D dayTexture;
 uniform sampler2D nightTexture;
 uniform sampler2D normalMap;

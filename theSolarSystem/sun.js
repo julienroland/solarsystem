@@ -46,7 +46,7 @@ var Sun = {
     },
     createMesh: function () {
         var geometry = new THREE.SphereGeometry(0.5, 40, 40);
-        var texture = THREE.ImageUtils.loadTexture(PATH + 'sunmap.png');
+        var texture = THREE.ImageUtils.loadTexture(PATH + 'sun.png');
         var uniforms = {
             sunTexture: {type: "t", value: texture},
             time: {type: "f", value: 0.0}
@@ -57,7 +57,7 @@ var Sun = {
             fragmentShader: this.shaders.sun.fragment
         });
         this.registerAnimation(function (delta) {
-            Sun.sunMesh.material.uniforms['time'].value += .00025 * Date.now() - start;
+            Sun.sunMesh.material.uniforms['time'].value += delta;
         });
         this.sunMesh = new THREE.Mesh(geometry, material);
         this.sunMesh.receiveShadow = true;
@@ -167,7 +167,7 @@ var Sun = {
         }
 
         if (!this.isRealistic) {
-            this.diameter /= 10;
+            this.diameter /= 50;
             this.rotationPerSecond *= 60000;
             this.lightDistance /= 10;
         }

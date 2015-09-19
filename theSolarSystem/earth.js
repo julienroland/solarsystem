@@ -136,7 +136,7 @@ var Earth = {
 
         if (!this.isRealistic) {
             this.diameter *= 10;
-            this.orbitRadius /= 100;
+            this.orbitRadius /= 10;
             this.rotationPerSecond *= 600;
         }
     },
