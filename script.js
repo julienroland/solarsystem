@@ -1,6 +1,7 @@
 //Dependencies
-var Earth = require('./theSolarSystem/earth');
 var Sun = require('./theSolarSystem/sun');
+var Earth = require('./theSolarSystem/earth');
+var Moon = require('./theSolarSystem/moon');
 var Skybox = require('./theSolarSystem/skybox');
 //Config
 var container = document.getElementById('scene');
@@ -127,6 +128,13 @@ function addPlanets(sun) {
             onRenderContainer.push(animation);
         });
         console.log('Earth loaded');
+
+        Moon.make({scene: scene, isRealistic: isRealistic, earth: Earth}, function (animations) {
+            animations.forEach(function (animation) {
+                onRenderContainer.push(animation);
+            });
+            console.log('Moon loaded');
+        });
     });
 }
 function init() {

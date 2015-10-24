@@ -12,11 +12,12 @@ var Earth = {
     nbpoly: 50,
     atmosphereRadius: undefined,
     atmosphereSize: undefined,
+    //23.44 degrees
     axialTilt: 0.40840704497,
     //@math return (Degree.convert(360) / this.timeToFullSelfRotation);
     rotationPerSecond: 0.000007393570389010043,
     orbitRadius: 35643,
-    earthOrbitAngle: 0,
+    orbitAngle: 0,
     properties: {
         //kg (5.98 * 10e24)
         mass: 5980000000000000000000000,
@@ -54,7 +55,7 @@ var Earth = {
     },
     init: function (scene) {
         this.container = new THREE.Object3D();
-        this.container.rotateZ(this.axialTilt * Math.PI / 180);
+        this.container.rotateZ(this.axialTilt);
         //Sun diameter * 109 = radius of earth's orbit (149,597,870 km) (35643)
         this.container.position.x = this.orbitRadius;
         scene.add(this.container);
@@ -113,7 +114,7 @@ var Earth = {
         this.earthCloud = new THREE.Mesh(geometry, material)
         this.earthCloud.receiveShadow = true;
         this.earthCloud.castShadow = true;
-        this.earthCloud.scale.multiplyScalar(1.002);
+        this.earthCloud.scale.multiplyScalar(1.01);
         this.container.add(this.earthCloud);
 
     },
@@ -129,12 +130,13 @@ var Earth = {
     },
     animate: function () {
         this.animations.push(function (delta, now) {
+            //Self rotation
             Earth.earthMesh.rotation.y += Earth.rotationPerSecond / 60;
-
             Earth.earthCloud.rotation.y += (Earth.rotationPerSecond * 1.2) / 60;
 
-            Earth.earthOrbitAngle += 0.5;
-            var orbitAngleInRadians = Earth.earthOrbitAngle * Math.PI / 180;
+            //Revolution
+            Earth.orbitAngle += 0.5;
+            var orbitAngleInRadians = Earth.orbitAngle * Math.PI / 180;
 
             Earth.container.position.x = Math.cos(orbitAngleInRadians) * Earth.orbitRadius;
             Earth.container.position.z = Math.sin(orbitAngleInRadians) * Earth.orbitRadius * 1.25;
