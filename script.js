@@ -36,7 +36,7 @@ function addLights() {
     scene.add(light);
 }
 function isDev() {
-    return ENV == 'dev';
+    return ENV === 'dev';
 }
 function addCamera() {
     camera = new THREE.PerspectiveCamera(
@@ -44,13 +44,11 @@ function addCamera() {
         aspectRatio,
         nearPlane,
         farPlane);
-    camera.position.z = 150;
-    camera.position.x = 506;
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 }
 function addControls() {
     controls = new THREE.TrackballControls(camera);
-    controls.target.set(356, 0, 0);
+    controls.target.set(3600, 0, 0);
     controls.rotateSpeed = 1.0;
     controls.zoomSpeed = 1.2;
     controls.panSpeed = 0.8;
@@ -128,6 +126,7 @@ function addPlanets(sun) {
         animations.forEach(function (animation) {
             onRenderContainer.push(animation);
         });
+        console.log('Earth loaded');
     });
 }
 function init() {

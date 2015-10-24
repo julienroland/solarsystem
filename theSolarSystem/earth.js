@@ -1,6 +1,5 @@
 var Atmospheres = require('../lib/threex.atmospherematerial');
 var ShaderLoader = require('../lib/shaderLoader');
-var Physics = require('../lib/physics');
 const PATH = "./images/";
 const SHADERS = "./theSolarSystem/earthShaders/";
 //@math var Degree = require('../lib/degreeInRadian');
@@ -17,6 +16,7 @@ var Earth = {
     //@math return (Degree.convert(360) / this.timeToFullSelfRotation);
     rotationPerSecond: 0.000007393570389010043,
     orbitRadius: 35643,
+    earthOrbitAngle: 0,
     properties: {
         //kg (5.98 * 10e24)
         mass: 5980000000000000000000000,
@@ -26,6 +26,8 @@ var Earth = {
         rotationTime: 84817.4724,
         //km/h
         rotationSpeed: 1180,
+        //km/h
+        revolutionSpeed: 1800,
         //degree
         axialTilt: 23.4
     },
@@ -41,6 +43,7 @@ var Earth = {
             self.createMesh();
             self.createAtmosphere();
             self.createClouds();
+            self.animate();
             callback(self.animations);
         });
     },
@@ -96,9 +99,6 @@ var Earth = {
         this.earthMesh.receiveShadow = true;
         this.earthMesh.castShadow = true;
         this.container.add(this.earthMesh);
-        this.registerAnimation(function (delta, now) {
-            Earth.earthMesh.rotation.y += Earth.rotationPerSecond / 60;
-        })
     },
     createClouds: function () {
         var geometry = new THREE.SphereGeometry(this.diameter, this.nbpoly, this.nbpoly)
@@ -115,9 +115,7 @@ var Earth = {
         this.earthCloud.castShadow = true;
         this.earthCloud.scale.multiplyScalar(1.002);
         this.container.add(this.earthCloud);
-        this.registerAnimation(function (delta, now) {
-            Earth.earthCloud.rotation.y += (Earth.rotationPerSecond * 1.2) / 60;
-        });
+
     },
     createAtmosphere: function () {
         var geometry = new THREE.SphereGeometry(this.diameter, this.nbpoly, this.nbpoly);
@@ -129,19 +127,29 @@ var Earth = {
         this.atmosphere1.scale.multiplyScalar(1.02);
         this.container.add(this.atmosphere1);
     },
+    animate: function () {
+        this.animations.push(function (delta, now) {
+            Earth.earthMesh.rotation.y += Earth.rotationPerSecond / 60;
+
+            Earth.earthCloud.rotation.y += (Earth.rotationPerSecond * 1.2) / 60;
+
+            Earth.earthOrbitAngle += 0.5;
+            var orbitAngleInRadians = Earth.earthOrbitAngle * Math.PI / 180;
+
+            Earth.container.position.x = Math.cos(orbitAngleInRadians) * Earth.orbitRadius;
+            Earth.container.position.z = Math.sin(orbitAngleInRadians) * Earth.orbitRadius * 1.25;
+        });
+    },
     manageRealism: function (isRealistic) {
         if (typeof isRealistic != "undefined") {
             this.isRealistic = isRealistic;
         }
 
         if (!this.isRealistic) {
-            this.diameter *= 10;
-            this.orbitRadius /= 10;
-            this.rotationPerSecond *= 600;
+            this.diameter *= 30;
+            this.orbitRadius /= 20;
+            this.rotationPerSecond *= 60000;
         }
-    },
-    registerAnimation: function (callable) {
-        this.animations.push(callable);
     }
 };
 

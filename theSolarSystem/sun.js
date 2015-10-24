@@ -167,8 +167,8 @@ var Sun = {
         }
 
         if (!this.isRealistic) {
-            this.diameter /= 50;
-            this.rotationPerSecond *= 60000;
+            this.diameter /= 20;
+            this.rotationPerSecond *= 6000000;
             this.lightDistance /= 10;
         }
     }
