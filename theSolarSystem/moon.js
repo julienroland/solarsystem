@@ -60,7 +60,7 @@ var Moon = {
             Moon.container.rotation.y += Moon.rotationPerSecond / 60;
 
             //Revolution
-            Moon.orbitAngle += 0.1;
+            Moon.orbitAngle -= 0.1;
             var orbitAngleInRadians = Moon.orbitAngle * Math.PI / 180;
 
             Moon.container.position.x = Moon.earth.container.position.x + Math.cos(orbitAngleInRadians) * Moon.orbitRadius;

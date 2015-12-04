@@ -135,10 +135,10 @@ var Earth = {
             Earth.earthCloud.rotation.y += (Earth.rotationPerSecond * 1.2) / 60;
 
             //Revolution
-            Earth.orbitAngle += 0.01;
+            Earth.orbitAngle -= 0.01;
             var orbitAngleInRadians = Earth.orbitAngle * Math.PI / 180;
 
-            Earth.container.position.x = Math.cos(orbitAngleInRadians) * Earth.orbitRadius;
+            Earth.container.position.x =  Math.cos(orbitAngleInRadians) * Earth.orbitRadius;
             Earth.container.position.z = Math.sin(orbitAngleInRadians) * Earth.orbitRadius * 1.25;
         });
     },
